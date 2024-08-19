@@ -29,6 +29,20 @@ class Person(Base):
     origin_location_id = Column(Integer, ForeignKey('locations.id'))
     metadata = Column(JSON)
 
+class Location(Base):
+    __tablename__ = 'locations'
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(Integer, ForeignKey('entities.id'))
+    name = Column(String, nullable=False)
+    official_name = Column(String)
+    country_code = Column(String(2))
+    longitude = Column(Numeric(9, 6))
+    latitude = Column(Numeric(8, 6))
+    geoname_id = Column(Integer)
+    location_type = Column(Enum('city', 'place', 'country', 'continent', 'region', 'other', name='location_type'))
+    population = Column(Integer)
+    metadata = Column(JSON)
+
 class Authority(Base):
     __tablename__ = 'authorities'
     id = Column(Integer, primary_key=True)
