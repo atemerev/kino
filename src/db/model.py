@@ -40,7 +40,7 @@ class Location(Base):
     longitude = Column(Numeric(9, 6))
     latitude = Column(Numeric(8, 6))
     geoname_id = Column(Integer)
-    location_type = Column(Enum('city', 'place', 'country', 'continent', 'region', 'other', name='location_type'))
+    location_type = Column(Enum('city', 'place', 'country', 'continent', 'region', 'admin1', 'admin2', 'admin3', 'admin4', 'admin5', 'admin6', 'admin_other', 'other', name='location_type'))
     population = Column(Integer)
 
 class Authority(Base):
