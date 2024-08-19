@@ -35,7 +35,19 @@ def load_facebook_data(file_path: str, db_url: str):
     with open(file_path, 'r') as file:
         csv_reader = csv.reader(file, delimiter=':')
         for row in csv_reader:
-            phone, facebook_id, first_name, last_name, sex, current_city, hometown, relationship_status, workplace, join_date, email, birthday = row
+            # Ensure we have at least the minimum required fields
+            if len(row) < 5:
+                print(f"Skipping row with insufficient data: {row}")
+                continue
+
+            phone, facebook_id, first_name, last_name, sex, *other_fields = row
+            current_city = other_fields[0] if len(other_fields) > 0 else None
+            hometown = other_fields[1] if len(other_fields) > 1 else None
+            relationship_status = other_fields[2] if len(other_fields) > 2 else None
+            workplace = other_fields[3] if len(other_fields) > 3 else None
+            join_date = other_fields[4] if len(other_fields) > 4 else None
+            email = other_fields[5] if len(other_fields) > 5 else None
+            birthday = other_fields[6] if len(other_fields) > 6 else None
 
             # Create or get the entity
             entity = Entity(type='person', name=f"{first_name} {last_name}")
