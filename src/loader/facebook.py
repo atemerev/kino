@@ -38,9 +38,6 @@ def load_facebook_data(file_path: str, db_url: str):
         session.add(facebook_authority)
         session.commit()
 
-    # Initialize LocalGeocoder
-    geocoder = LocalGeocoder()
-
     # Initialize location cache
     location_cache = {}
 
