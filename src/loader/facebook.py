@@ -34,7 +34,7 @@ def load_facebook_data(file_path: str, db_url: str):
                 first_name=first_name,
                 last_name=last_name,
                 sex=sex.lower() if sex else None,
-                relationship_status=relationship_status.lower().replace(' ', '_') if relationship_status else None
+                relationship_status=relationship_status.lower().replace(' ', '_') if relationship_status and relationship_status.lower().replace(' ', '_') in ['single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship'] else None
             )
             session.add(person)
 
