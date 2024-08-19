@@ -5,10 +5,12 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 DROP TYPE IF EXISTS artifact_type CASCADE;
 DROP TYPE IF EXISTS entity_type CASCADE;
 DROP TYPE IF EXISTS source_type CASCADE;
+DROP TYPE IF EXISTS identifier_type CASCADE;
 
 CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'web_page', 'other');
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
 CREATE TYPE source_type AS ENUM ('account_leak', 'social_media', 'website', 'other');
+CREATE TYPE identifier_type AS ENUM ('phone', 'email', 'username', 'tax_number', 'passport', 'national_id', 'other');
 
 -- Sources table
 DROP TABLE IF EXISTS sources CASCADE;
@@ -140,7 +142,7 @@ DROP TABLE IF EXISTS entity_identifiers CASCADE;
 CREATE TABLE IF NOT EXISTS entity_identifiers (
     id SERIAL PRIMARY KEY,
     entity_id INTEGER REFERENCES entities(id),
-    identifier_type TEXT NOT NULL,
+    identifier_type identifier_type NOT NULL,
     identifier_value TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
