@@ -173,6 +173,4 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_entity_identifiers_authority_type_value ON
 -- Insert some example authorities
 INSERT INTO authorities (name, description) VALUES
 ('Facebook', 'Facebook usernames'),
-('Twitter', 'Twitter usernames'),
-('Russian Passport', 'Russian passport IDs'),
-('Swiss Commercial Registry', 'Swiss commercial registry numbers');
+('Twitter', 'Twitter usernames');
