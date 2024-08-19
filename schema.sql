@@ -1,5 +1,5 @@
 -- Create enum types
-CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'other');
+CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'web_page', 'other');
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
 
 -- Artifacts table
