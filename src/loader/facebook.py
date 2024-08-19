@@ -5,6 +5,7 @@ import csv
 from typing import List, Dict
 import sys
 import os
+import json
 
 # Add the project root directory to the Python path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -49,8 +50,24 @@ def load_facebook_data(file_path: str, db_url: str):
             email = other_fields[5] if len(other_fields) > 5 else None
             birthday = other_fields[6] if len(other_fields) > 6 else None
 
+            # Create metadata dictionary
+            metadata = {
+                'phone': phone,
+                'facebook_id': facebook_id,
+                'first_name': first_name,
+                'last_name': last_name,
+                'sex': sex,
+                'current_city': current_city,
+                'hometown': hometown,
+                'relationship_status': relationship_status,
+                'workplace': workplace,
+                'join_date': join_date,
+                'email': email,
+                'birthday': birthday
+            }
+
             # Create or get the entity
-            entity = Entity(type='person', name=f"{first_name} {last_name}")
+            entity = Entity(type='person', name=f"{first_name} {last_name}", metadata=json.dumps(metadata))
             session.add(entity)
             session.flush()  # This will assign an ID to the entity
 
