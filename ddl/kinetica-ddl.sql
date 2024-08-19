@@ -25,16 +25,7 @@ CREATE TABLE EntityMentions (
     FOREIGN KEY (artifact_id) REFERENCES Artifacts(artifact_id)
 );
 
-CREATE TABLE Relationships (
-    relationship_id BIGINT PRIMARY KEY,
-    from_entity_id BIGINT,
-    to_entity_id BIGINT,
-    type VARCHAR(50),
-    strength FLOAT,
-    evidence JSON,
-    FOREIGN KEY (from_entity_id) REFERENCES Entities(entity_id),
-    FOREIGN KEY (to_entity_id) REFERENCES Entities(entity_id)
-);
+-- Relationships table removed from relational schema
 
 CREATE TABLE EnrichmentSources (
     source_id BIGINT PRIMARY KEY,

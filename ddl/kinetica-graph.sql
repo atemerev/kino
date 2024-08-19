@@ -8,13 +8,12 @@ CREATE GRAPH IntelligenceGraph (
     ),
 
     -- Edge types
-    MENTIONS (
-        FROM Artifacts.id TO Entities.id,
-        mention_id BIGINT REFERENCES EntityMentions(mention_id)
-    ),
     RELATES (
         FROM Entities.id TO Entities.id,
-        relationship_id BIGINT REFERENCES Relationships(relationship_id)
+        relationship_id BIGINT,
+        type VARCHAR(50),
+        strength FLOAT,
+        evidence JSON
     )
 )
 WITH SCHEMA_CHANGE_TRACKING = TRACK;
