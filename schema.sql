@@ -103,8 +103,8 @@ CREATE TABLE IF NOT EXISTS entity_mentions (
 DROP TABLE IF EXISTS entity_relationships CASCADE;
 CREATE TABLE IF NOT EXISTS entity_relationships (
     id SERIAL PRIMARY KEY,
-    entity1_id INTEGER REFERENCES entities(id),
-    entity2_id INTEGER REFERENCES entities(id),
+    source_entity INTEGER REFERENCES entities(id),
+    target_entity INTEGER REFERENCES entities(id),
     relationship_type TEXT NOT NULL,
     metadata JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -116,8 +116,8 @@ CREATE INDEX IF NOT EXISTS idx_artifacts_type ON artifacts(type);
 CREATE INDEX IF NOT EXISTS idx_entities_type ON entities(type);
 CREATE INDEX IF NOT EXISTS idx_entity_mentions_artifact_id ON entity_mentions(artifact_id);
 CREATE INDEX IF NOT EXISTS idx_entity_mentions_entity_id ON entity_mentions(entity_id);
-CREATE INDEX IF NOT EXISTS idx_entity_relationships_entity1_id ON entity_relationships(entity1_id);
-CREATE INDEX IF NOT EXISTS idx_entity_relationships_entity2_id ON entity_relationships(entity2_id);
+CREATE INDEX IF NOT EXISTS idx_entity_relationships_source_entity ON entity_relationships(source_entity);
+CREATE INDEX IF NOT EXISTS idx_entity_relationships_target_entity ON entity_relationships(target_entity);
 
 -- Create index for sources
 CREATE INDEX IF NOT EXISTS idx_sources_type ON sources(type);
