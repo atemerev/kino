@@ -6,11 +6,15 @@ DROP TYPE IF EXISTS artifact_type CASCADE;
 DROP TYPE IF EXISTS entity_type CASCADE;
 DROP TYPE IF EXISTS source_type CASCADE;
 DROP TYPE IF EXISTS identifier_type CASCADE;
+DROP TYPE IF EXISTS relationship_status CASCADE;
+DROP TYPE IF EXISTS sex CASCADE;
 
 CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'web_page', 'other');
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
 CREATE TYPE source_type AS ENUM ('account_leak', 'social_media', 'website', 'other');
 CREATE TYPE identifier_type AS ENUM ('phone', 'email', 'username', 'tax_number', 'passport', 'national_id', 'other');
+CREATE TYPE relationship_status AS ENUM ('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other');
+CREATE TYPE sex AS ENUM ('male', 'female', 'other');
 
 -- Sources table
 DROP TABLE IF EXISTS sources CASCADE;
@@ -58,8 +62,8 @@ CREATE TABLE IF NOT EXISTS persons (
     last_name TEXT,
     date_of_birth DATE,
     nationality TEXT,
-    sex TEXT,
-    relationship_status TEXT,
+    sex sex,
+    relationship_status relationship_status,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
