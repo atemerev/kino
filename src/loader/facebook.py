@@ -59,9 +59,9 @@ def load_facebook_data(file_path: str, db_url: str):
             origin_location_id = None
 
             if current_location:
-                current_location_id = get_or_create_location(session, geocoder, location_cache, current_location)
+                current_location_id = get_or_create_location(session, gc, location_cache, current_location)
             if origin_location:
-                origin_location_id = get_or_create_location(session, geocoder, location_cache, origin_location)
+                origin_location_id = get_or_create_location(session, gc, location_cache, origin_location)
 
             # Create metadata dictionary
             metadata = {
@@ -112,30 +112,32 @@ def load_facebook_data(file_path: str, db_url: str):
     session.commit()
     session.close()
 
-def get_or_create_location(session, geocoder, location_cache, location_name):
+def get_or_create_location(session, gc, location_cache, location_name):
     # Check if the location is already in the cache
     if location_name in location_cache:
         return location_cache[location_name]
 
     # Try to geocode the location
-    geocoded = geocoder.geocode(location_name)
+    geocoded = gc.decode(location_name)
     if geocoded:
+        # Use the first result if there are multiple
+        geocoded = geocoded[0]
         # Check if the location with this geoname_id already exists in the database
-        existing_location = session.query(Location).filter_by(geoname_id=geocoded.geoname_id).first()
+        existing_location = session.query(Location).filter_by(geoname_id=geocoded['geoname_id']).first()
         if existing_location:
             location_cache[location_name] = existing_location.id
             return existing_location.id
 
         # Create a new location
         location = Location(
-            name=geocoded.name,
-            official_name=geocoded.official_name,
-            country_code=geocoded.country_code,
-            longitude=geocoded.longitude,
-            latitude=geocoded.latitude,
-            geoname_id=geocoded.geoname_id,
-            location_type=geocoded.feature_type,
-            population=geocoded.population
+            name=geocoded['name'],
+            official_name=geocoded['official_name'],
+            country_code=geocoded['country_code'],
+            longitude=geocoded['longitude'],
+            latitude=geocoded['latitude'],
+            geoname_id=geocoded['geoname_id'],
+            location_type=geocoded['location_type'],
+            population=geocoded['population']
         )
         session.add(location)
         session.flush()  # This will assign an ID to the location
