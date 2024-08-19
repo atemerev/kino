@@ -51,6 +51,8 @@ class Authority(Base):
     name = Column(String, unique=True, nullable=False)
     description = Column(String)
     meta_data = Column(JSON)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 class EntityIdentifier(Base):
     __tablename__ = 'entity_identifiers'
