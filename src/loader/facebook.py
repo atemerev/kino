@@ -46,10 +46,6 @@ def load_facebook_data(file_path: str, db_url: str):
             hometown = other_fields[1] if len(other_fields) > 1 else None
             relationship_status = other_fields[2] if len(other_fields) > 2 else None
             workplace = other_fields[3] if len(other_fields) > 3 else None
-            join_date = other_fields[4] if len(other_fields) > 4 else None
-            email = other_fields[5] if len(other_fields) > 5 else None
-            birthday = other_fields[6] if len(other_fields) > 6 else None
-
             # Create metadata dictionary
             metadata = {
                 'phone': phone,
@@ -60,10 +56,7 @@ def load_facebook_data(file_path: str, db_url: str):
                 'current_city': current_city,
                 'hometown': hometown,
                 'relationship_status': relationship_status,
-                'workplace': workplace,
-                'join_date': join_date,
-                'email': email,
-                'birthday': birthday
+                'workplace': workplace
             }
 
             # Create or get the entity
@@ -84,8 +77,7 @@ def load_facebook_data(file_path: str, db_url: str):
             # Create entity identifiers
             identifiers = [
                 ('phone', phone, None),
-                ('user_id', facebook_id, facebook_authority.id),
-                ('email', email, None)
+                ('user_id', facebook_id, facebook_authority.id)
             ]
 
             for id_type, id_value, authority_id in identifiers:
