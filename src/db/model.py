@@ -9,14 +9,14 @@ class Source(Base):
     id = Column(Integer, primary_key=True)
     type = Column(Enum('account_leak', 'social_media', 'website', 'other', name='source_type'), nullable=False)
     name = Column(String, nullable=False)
-    metadata = Column(JSON)
+    meta_data = Column(JSON)
 
 class Entity(Base):
     __tablename__ = 'entities'
     id = Column(Integer, primary_key=True)
     type = Column(Enum('person', 'organization', 'location', 'other', name='entity_type'), nullable=False)
     name = Column(String, nullable=False)
-    metadata = Column(JSON)
+    meta_data = Column(JSON)
     source_timestamp = Column(DateTime(timezone=True))
 
 class Person(Base):
@@ -29,7 +29,7 @@ class Person(Base):
     relationship_status = Column(Enum('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other', name='relationship_status'))
     current_location_id = Column(Integer, ForeignKey('locations.id'))
     origin_location_id = Column(Integer, ForeignKey('locations.id'))
-    metadata = Column(JSON)
+    meta_data = Column(JSON)
 
 class Location(Base):
     __tablename__ = 'locations'

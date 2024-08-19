@@ -65,7 +65,7 @@ def load_facebook_data(file_path: str, db_url: str):
                 origin_location_id = get_or_create_location(session, gc, location_cache, origin_location)
 
             # Create metadata dictionary
-            metadata = {
+            meta_data = {
                 'phone': phone,
                 'facebook_id': facebook_id,
                 'first_name': first_name,
@@ -78,7 +78,7 @@ def load_facebook_data(file_path: str, db_url: str):
             }
 
             # Create or get the entity
-            entity = Entity(type='person', name=f"{first_name} {last_name}", metadata=json.dumps(metadata))
+            entity = Entity(type='person', name=f"{first_name} {last_name}", meta_data=json.dumps(meta_data))
             session.add(entity)
             session.flush()  # This will assign an ID to the entity
 
