@@ -143,11 +143,22 @@ CREATE INDEX IF NOT EXISTS idx_entities_name_trgm ON entities USING gin (name gi
 CREATE INDEX IF NOT EXISTS idx_persons_first_name_trgm ON persons USING gin (first_name gin_trgm_ops);
 CREATE INDEX IF NOT EXISTS idx_persons_last_name_trgm ON persons USING gin (last_name gin_trgm_ops);
 
+-- Authorities table
+DROP TABLE IF EXISTS authorities CASCADE;
+CREATE TABLE IF NOT EXISTS authorities (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Entity identifiers table
 DROP TABLE IF EXISTS entity_identifiers CASCADE;
 CREATE TABLE IF NOT EXISTS entity_identifiers (
     id SERIAL PRIMARY KEY,
     entity_id INTEGER REFERENCES entities(id),
+    authority_id INTEGER REFERENCES authorities(id),
     identifier_type identifier_type NOT NULL,
     identifier_value TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -156,4 +167,12 @@ CREATE TABLE IF NOT EXISTS entity_identifiers (
 
 -- Create indexes for entity_identifiers
 CREATE INDEX IF NOT EXISTS idx_entity_identifiers_entity_id ON entity_identifiers(entity_id);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_entity_identifiers_type_value ON entity_identifiers(identifier_type, identifier_value);
+CREATE INDEX IF NOT EXISTS idx_entity_identifiers_authority_id ON entity_identifiers(authority_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_entity_identifiers_authority_type_value ON entity_identifiers(authority_id, identifier_type, identifier_value);
+
+-- Insert some example authorities
+INSERT INTO authorities (name, description) VALUES
+('Facebook', 'Facebook usernames'),
+('Twitter', 'Twitter usernames'),
+('Russian Passport', 'Russian passport IDs'),
+('Swiss Commercial Registry', 'Swiss commercial registry numbers');

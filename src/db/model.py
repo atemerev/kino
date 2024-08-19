@@ -24,9 +24,16 @@ class Person(Base):
     sex = Column(Enum('male', 'female', 'other', name='sex'))
     relationship_status = Column(Enum('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other', name='relationship_status'))
 
+class Authority(Base):
+    __tablename__ = 'authorities'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, nullable=False)
+    description = Column(String)
+
 class EntityIdentifier(Base):
     __tablename__ = 'entity_identifiers'
     id = Column(Integer, primary_key=True)
     entity_id = Column(Integer, ForeignKey('entities.id'))
+    authority_id = Column(Integer, ForeignKey('authorities.id'))
     identifier_type = Column(Enum('phone', 'email', 'username', 'tax_number', 'passport', 'national_id', 'other', name='identifier_type'), nullable=False)
     identifier_value = Column(String, nullable=False)

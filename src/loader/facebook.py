@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import csv
 from typing import List, Dict
-from src.db.model import Base, Source, Entity, Person, EntityIdentifier
+from src.db.model import Base, Source, Entity, Person, EntityIdentifier, Authority
 
 def load_facebook_data(file_path: str, db_url: str):
     engine = create_engine(db_url)
@@ -16,6 +16,13 @@ def load_facebook_data(file_path: str, db_url: str):
     if not facebook_source:
         facebook_source = Source(type='social_media', name='Facebook')
         session.add(facebook_source)
+        session.commit()
+
+    # Create or get the Facebook authority
+    facebook_authority = session.query(Authority).filter_by(name='Facebook').first()
+    if not facebook_authority:
+        facebook_authority = Authority(name='Facebook', description='Facebook usernames')
+        session.add(facebook_authority)
         session.commit()
 
     with open(file_path, 'r') as file:
@@ -40,15 +47,16 @@ def load_facebook_data(file_path: str, db_url: str):
 
             # Create entity identifiers
             identifiers = [
-                ('phone', phone),
-                ('username', facebook_id),
-                ('email', email)
+                ('phone', phone, None),
+                ('username', facebook_id, facebook_authority.id),
+                ('email', email, None)
             ]
 
-            for id_type, id_value in identifiers:
+            for id_type, id_value, authority_id in identifiers:
                 if id_value:
                     identifier = EntityIdentifier(
                         entity_id=entity.id,
+                        authority_id=authority_id,
                         identifier_type=id_type,
                         identifier_value=id_value
                     )
