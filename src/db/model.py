@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Enum, ForeignKey, JSON, DateTime
+from sqlalchemy import Column, Integer, String, Date, Enum, ForeignKey, JSON, DateTime, Numeric
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 
