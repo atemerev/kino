@@ -1,36 +1,37 @@
-CREATE TABLE Artifacts (
+DROP TABLE IF EXISTS EntityMentions;
+DROP TABLE IF EXISTS EntityEnrichments;
+DROP TABLE IF EXISTS EnrichmentSources;
+DROP TABLE IF EXISTS Entities;
+DROP TABLE IF EXISTS Artifacts;
+
+CREATE REPLICATED TABLE Artifacts (
     artifact_id BIGINT PRIMARY KEY,
     type VARCHAR(50),
     content TEXT,
     source VARCHAR(255),
     timestamp TIMESTAMP,
-    metadata JSON,
-    SHARD KEY (artifact_id)
+    metadata JSON
 );
 
-CREATE TABLE Entities (
+CREATE REPLICATED TABLE Entities (
     entity_id BIGINT PRIMARY KEY,
     type VARCHAR(50),
     name VARCHAR(255),
-    metadata JSON,
-    SHARD KEY (entity_id)
+    metadata JSON
 );
 
 CREATE TABLE EntityMentions (
-    mention_id BIGINT PRIMARY KEY,
+    mention_id BIGINT,
     entity_id BIGINT,
     artifact_id BIGINT,
     start_position INTEGER,
     end_position INTEGER,
     context TEXT,
     FOREIGN KEY (entity_id) REFERENCES Entities(entity_id),
-    FOREIGN KEY (artifact_id) REFERENCES Artifacts(artifact_id),
-    SHARD KEY (entity_id)
+    FOREIGN KEY (artifact_id) REFERENCES Artifacts(artifact_id)
 );
 
--- Relationships table removed from relational schema
-
-CREATE TABLE EnrichmentSources (
+CREATE REPLICATED TABLE EnrichmentSources (
     source_id BIGINT PRIMARY KEY,
     name VARCHAR(255),
     description TEXT,
