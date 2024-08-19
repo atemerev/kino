@@ -114,19 +114,21 @@ def load_facebook_data(file_path: str, db_url: str):
     session.close()
 
 def get_or_create_location(session, gc, location_cache, location_name):
-    # Check if the location is already in the cache
-    if location_name in location_cache:
-        return location_cache[location_name]
-
     # Try to geocode the location
     geocoded = gc.decode(location_name)
     if geocoded:
         # Use the first result if there are multiple
         geocoded = geocoded[0]
+        geoname_id = geocoded['geoname_id']
+        
+        # Check if the location is already in the cache
+        if geoname_id in location_cache:
+            return location_cache[geoname_id]
+        
         # Check if the location with this geoname_id already exists in the database
-        existing_location = session.query(Location).filter_by(geoname_id=geocoded['geoname_id']).first()
+        existing_location = session.query(Location).filter_by(geoname_id=geoname_id).first()
         if existing_location:
-            location_cache[location_name] = existing_location.id
+            location_cache[geoname_id] = existing_location.id
             return existing_location.id
 
         # Create a new location
@@ -136,13 +138,13 @@ def get_or_create_location(session, gc, location_cache, location_name):
             country_code=geocoded['country_code'],
             longitude=geocoded['longitude'],
             latitude=geocoded['latitude'],
-            geoname_id=geocoded['geoname_id'],
+            geoname_id=geoname_id,
             location_type=geocoded['location_type'],
             population=geocoded['population']
         )
         session.add(location)
         session.flush()  # This will assign an ID to the location
-        location_cache[location_name] = location.id
+        location_cache[geoname_id] = location.id
         return location.id
     else:
         print(f"Could not geocode location: {location_name}")
