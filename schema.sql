@@ -53,26 +53,3 @@ CREATE INDEX idx_entity_mentions_entity_id ON entity_mentions(entity_id);
 CREATE INDEX idx_entity_relationships_entity1_id ON entity_relationships(entity1_id);
 CREATE INDEX idx_entity_relationships_entity2_id ON entity_relationships(entity2_id);
 
--- Add triggers for updating 'updated_at' columns
-CREATE OR REPLACE FUNCTION update_modified_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
-
-CREATE TRIGGER update_artifacts_modtime
-    BEFORE UPDATE ON artifacts
-    FOR EACH ROW
-    EXECUTE FUNCTION update_modified_column();
-
-CREATE TRIGGER update_entities_modtime
-    BEFORE UPDATE ON entities
-    FOR EACH ROW
-    EXECUTE FUNCTION update_modified_column();
-
-CREATE TRIGGER update_entity_relationships_modtime
-    BEFORE UPDATE ON entity_relationships
-    FOR EACH ROW
-    EXECUTE FUNCTION update_modified_column();
