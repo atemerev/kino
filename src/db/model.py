@@ -59,7 +59,7 @@ class EntityIdentifier(Base):
     authority_id = Column(Integer, ForeignKey('authorities.id'))
     identifier_type = Column(Enum('phone', 'email', 'username', 'user_id', 'tax_number', 'passport', 'national_id', 'other', name='identifier_type'), nullable=False)
     identifier_value = Column(String, nullable=False)
-    metadata = Column(JSON)
+    meta_data = Column(JSON)
 
 class Artifact(Base):
     __tablename__ = 'artifacts'
@@ -67,5 +67,5 @@ class Artifact(Base):
     source_id = Column(Integer, ForeignKey('sources.id'))
     type = Column(Enum('document', 'social_media_post', 'account_dump', 'web_page', 'other', name='artifact_type'), nullable=False)
     content = Column(String, nullable=False)
-    metadata = Column(JSON)
+    meta_data = Column(JSON)
     source_timestamp = Column(DateTime(timezone=True))
