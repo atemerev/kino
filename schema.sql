@@ -1,13 +1,18 @@
 -- Enable pg_trgm extension for fuzzy search
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
--- Create enum types
+-- Drop and recreate enum types
+DROP TYPE IF EXISTS artifact_type CASCADE;
+DROP TYPE IF EXISTS entity_type CASCADE;
+DROP TYPE IF EXISTS source_type CASCADE;
+
 CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'web_page', 'other');
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
 CREATE TYPE source_type AS ENUM ('account_leak', 'social_media', 'website', 'other');
 
 -- Sources table
-CREATE TABLE sources (
+DROP TABLE IF EXISTS sources CASCADE;
+CREATE TABLE IF NOT EXISTS sources (
     id SERIAL PRIMARY KEY,
     type source_type NOT NULL,
     name TEXT NOT NULL,
@@ -20,7 +25,8 @@ CREATE TABLE sources (
 );
 
 -- Artifacts table
-CREATE TABLE artifacts (
+DROP TABLE IF EXISTS artifacts CASCADE;
+CREATE TABLE IF NOT EXISTS artifacts (
     id SERIAL PRIMARY KEY,
     source_id INTEGER REFERENCES sources(id),
     type artifact_type NOT NULL,
@@ -31,7 +37,8 @@ CREATE TABLE artifacts (
 );
 
 -- Entities table
-CREATE TABLE entities (
+DROP TABLE IF EXISTS entities CASCADE;
+CREATE TABLE IF NOT EXISTS entities (
     id SERIAL PRIMARY KEY,
     type entity_type NOT NULL,
     name TEXT NOT NULL,
@@ -41,7 +48,8 @@ CREATE TABLE entities (
 );
 
 -- Persons table
-CREATE TABLE persons (
+DROP TABLE IF EXISTS persons CASCADE;
+CREATE TABLE IF NOT EXISTS persons (
     id SERIAL PRIMARY KEY,
     entity_id INTEGER REFERENCES entities(id),
     first_name TEXT,
@@ -53,7 +61,8 @@ CREATE TABLE persons (
 );
 
 -- Organizations table
-CREATE TABLE organizations (
+DROP TABLE IF EXISTS organizations CASCADE;
+CREATE TABLE IF NOT EXISTS organizations (
     id SERIAL PRIMARY KEY,
     entity_id INTEGER REFERENCES entities(id),
     org_type TEXT,
@@ -64,7 +73,8 @@ CREATE TABLE organizations (
 );
 
 -- Locations table
-CREATE TABLE locations (
+DROP TABLE IF EXISTS locations CASCADE;
+CREATE TABLE IF NOT EXISTS locations (
     id SERIAL PRIMARY KEY,
     entity_id INTEGER REFERENCES entities(id),
     location_type TEXT,
@@ -78,7 +88,8 @@ CREATE TABLE locations (
 );
 
 -- Entity mentions table (for named entity recognition results)
-CREATE TABLE entity_mentions (
+DROP TABLE IF EXISTS entity_mentions CASCADE;
+CREATE TABLE IF NOT EXISTS entity_mentions (
     id SERIAL PRIMARY KEY,
     artifact_id INTEGER REFERENCES artifacts(id),
     entity_id INTEGER REFERENCES entities(id),
@@ -90,7 +101,8 @@ CREATE TABLE entity_mentions (
 );
 
 -- Entity relationships table (for cross-referencing)
-CREATE TABLE entity_relationships (
+DROP TABLE IF EXISTS entity_relationships CASCADE;
+CREATE TABLE IF NOT EXISTS entity_relationships (
     id SERIAL PRIMARY KEY,
     entity1_id INTEGER REFERENCES entities(id),
     entity2_id INTEGER REFERENCES entities(id),
@@ -101,26 +113,26 @@ CREATE TABLE entity_relationships (
 );
 
 -- Create indexes
-CREATE INDEX idx_artifacts_type ON artifacts(type);
-CREATE INDEX idx_entities_type ON entities(type);
-CREATE INDEX idx_entity_mentions_artifact_id ON entity_mentions(artifact_id);
-CREATE INDEX idx_entity_mentions_entity_id ON entity_mentions(entity_id);
-CREATE INDEX idx_entity_relationships_entity1_id ON entity_relationships(entity1_id);
-CREATE INDEX idx_entity_relationships_entity2_id ON entity_relationships(entity2_id);
+CREATE INDEX IF NOT EXISTS idx_artifacts_type ON artifacts(type);
+CREATE INDEX IF NOT EXISTS idx_entities_type ON entities(type);
+CREATE INDEX IF NOT EXISTS idx_entity_mentions_artifact_id ON entity_mentions(artifact_id);
+CREATE INDEX IF NOT EXISTS idx_entity_mentions_entity_id ON entity_mentions(entity_id);
+CREATE INDEX IF NOT EXISTS idx_entity_relationships_entity1_id ON entity_relationships(entity1_id);
+CREATE INDEX IF NOT EXISTS idx_entity_relationships_entity2_id ON entity_relationships(entity2_id);
 
 -- Create index for sources
-CREATE INDEX idx_sources_type ON sources(type);
+CREATE INDEX IF NOT EXISTS idx_sources_type ON sources(type);
 
 -- Create index for artifacts.source_id
-CREATE INDEX idx_artifacts_source_id ON artifacts(source_id);
+CREATE INDEX IF NOT EXISTS idx_artifacts_source_id ON artifacts(source_id);
 
 -- Create indexes for new tables
-CREATE INDEX idx_persons_entity_id ON persons(entity_id);
-CREATE INDEX idx_organizations_entity_id ON organizations(entity_id);
-CREATE INDEX idx_locations_entity_id ON locations(entity_id);
+CREATE INDEX IF NOT EXISTS idx_persons_entity_id ON persons(entity_id);
+CREATE INDEX IF NOT EXISTS idx_organizations_entity_id ON organizations(entity_id);
+CREATE INDEX IF NOT EXISTS idx_locations_entity_id ON locations(entity_id);
 
 -- Create GIN indexes for fuzzy search
-CREATE INDEX idx_entities_name_trgm ON entities USING gin (name gin_trgm_ops);
-CREATE INDEX idx_persons_first_name_trgm ON persons USING gin (first_name gin_trgm_ops);
-CREATE INDEX idx_persons_last_name_trgm ON persons USING gin (last_name gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_entities_name_trgm ON entities USING gin (name gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_persons_first_name_trgm ON persons USING gin (first_name gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_persons_last_name_trgm ON persons USING gin (last_name gin_trgm_ops);
 
