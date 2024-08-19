@@ -42,8 +42,8 @@ def load_facebook_data(file_path: str, db_url: str):
                 continue
 
             phone, facebook_id, first_name, last_name, sex, *other_fields = row
-            current_city = other_fields[0] if len(other_fields) > 0 else None
-            hometown = other_fields[1] if len(other_fields) > 1 else None
+            current_location = other_fields[0] if len(other_fields) > 0 else None
+            origin_location = other_fields[1] if len(other_fields) > 1 else None
             relationship_status = other_fields[2] if len(other_fields) > 2 else None
             workplace = other_fields[3] if len(other_fields) > 3 else None
             # Create metadata dictionary
@@ -53,8 +53,8 @@ def load_facebook_data(file_path: str, db_url: str):
                 'first_name': first_name,
                 'last_name': last_name,
                 'sex': sex,
-                'current_city': current_city,
-                'hometown': hometown,
+                'current_location': current_location,
+                'origin_location': origin_location,
                 'relationship_status': relationship_status,
                 'workplace': workplace
             }
