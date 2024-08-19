@@ -131,8 +131,14 @@ def get_or_create_location(session, gc, location_cache, location_name):
             location_cache[geoname_id] = existing_location.id
             return existing_location.id
 
+        # Create a new entity for the location
+        location_entity = Entity(type='location', name=geocoded['name'], meta_data=json.dumps(geocoded))
+        session.add(location_entity)
+        session.flush()  # This will assign an ID to the entity
+
         # Create a new location
         location = Location(
+            entity_id=location_entity.id,
             name=geocoded['name'],
             official_name=geocoded['official_name'],
             country_code=geocoded['country_code'],
