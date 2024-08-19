@@ -50,7 +50,7 @@ class Authority(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
     description = Column(String)
-    metadata = Column(JSON)
+    meta_data = Column(JSON)
 
 class EntityIdentifier(Base):
     __tablename__ = 'entity_identifiers'
