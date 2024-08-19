@@ -17,7 +17,7 @@ class Entity(Base):
     type = Column(Enum('person', 'organization', 'location', 'other', name='entity_type'), nullable=False)
     name = Column(String, nullable=False)
     meta_data = Column(JSON)
-    source_timestamp = Column(DateTime(timezone=True))
+    source_timestamp = Column(DateTime(timezone=True), nullable=True)
 
 class Person(Base):
     __tablename__ = 'persons'
