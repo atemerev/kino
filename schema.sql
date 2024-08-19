@@ -135,18 +135,18 @@ CREATE INDEX IF NOT EXISTS idx_entities_name_trgm ON entities USING gin (name gi
 CREATE INDEX IF NOT EXISTS idx_persons_first_name_trgm ON persons USING gin (first_name gin_trgm_ops);
 CREATE INDEX IF NOT EXISTS idx_persons_last_name_trgm ON persons USING gin (last_name gin_trgm_ops);
 
--- Person identifiers table
-DROP TABLE IF EXISTS person_identifiers CASCADE;
-CREATE TABLE IF NOT EXISTS person_identifiers (
+-- Entity identifiers table
+DROP TABLE IF EXISTS entity_identifiers CASCADE;
+CREATE TABLE IF NOT EXISTS entity_identifiers (
     id SERIAL PRIMARY KEY,
-    person_id INTEGER REFERENCES persons(id),
+    entity_id INTEGER REFERENCES entities(id),
     identifier_type TEXT NOT NULL,
     identifier_value TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create indexes for person_identifiers
-CREATE INDEX IF NOT EXISTS idx_person_identifiers_person_id ON person_identifiers(person_id);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_person_identifiers_type_value ON person_identifiers(identifier_type, identifier_value);
+-- Create indexes for entity_identifiers
+CREATE INDEX IF NOT EXISTS idx_entity_identifiers_entity_id ON entity_identifiers(entity_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_entity_identifiers_type_value ON entity_identifiers(identifier_type, identifier_value);
 
