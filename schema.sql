@@ -1,7 +1,7 @@
 -- Create enum types
 CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'web_page', 'other');
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
-CREATE TYPE source_type AS ENUM ('account_leak', 'telegram_channel', 'website', 'other');
+CREATE TYPE source_type AS ENUM ('account_leak', 'social_media', 'website', 'other');
 
 -- Sources table
 CREATE TABLE sources (
