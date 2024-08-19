@@ -8,6 +8,7 @@ DROP TYPE IF EXISTS source_type CASCADE;
 DROP TYPE IF EXISTS identifier_type CASCADE;
 DROP TYPE IF EXISTS relationship_status CASCADE;
 DROP TYPE IF EXISTS sex CASCADE;
+DROP TYPE IF EXISTS location_type CASCADE;
 
 CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'web_page', 'other');
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
@@ -15,6 +16,7 @@ CREATE TYPE source_type AS ENUM ('account_leak', 'social_media', 'website', 'oth
 CREATE TYPE identifier_type AS ENUM ('phone', 'email', 'username', 'user_id', 'tax_number', 'passport', 'national_id', 'other');
 CREATE TYPE relationship_status AS ENUM ('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other');
 CREATE TYPE sex AS ENUM ('male', 'female', 'other');
+CREATE TYPE location_type AS ENUM ('city', 'place', 'country', 'continent', 'region', 'other');
 
 -- Sources table
 DROP TABLE IF EXISTS sources CASCADE;
@@ -93,7 +95,7 @@ CREATE TABLE IF NOT EXISTS locations (
     longitude DECIMAL(9,6),
     latitude DECIMAL(8,6),
     geoname_id INTEGER,
-    location_type TEXT CHECK (location_type IN ('city', 'place', 'country', 'continent', 'region', 'other')),
+    location_type location_type,
     population INTEGER,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
