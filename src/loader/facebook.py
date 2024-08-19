@@ -4,7 +4,13 @@ from datetime import datetime
 import csv
 from typing import List, Dict
 import sys
-from ..db.model import Base, Source, Entity, Person, EntityIdentifier, Authority
+import os
+
+# Add the project root directory to the Python path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.insert(0, project_root)
+
+from src.db.model import Base, Source, Entity, Person, EntityIdentifier, Authority
 
 def load_facebook_data(file_path: str, db_url: str):
     engine = create_engine(db_url)
