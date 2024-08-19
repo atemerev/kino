@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS sources (
     medium TEXT,
     channel TEXT,
     metadata JSONB,
+    source_timestamp TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -40,6 +41,7 @@ CREATE TABLE IF NOT EXISTS artifacts (
     type artifact_type NOT NULL,
     content TEXT NOT NULL,
     metadata JSONB,
+    source_timestamp TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

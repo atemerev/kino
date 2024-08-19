@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Date, Enum, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, Date, Enum, ForeignKey, JSON, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -16,6 +17,7 @@ class Entity(Base):
     type = Column(Enum('person', 'organization', 'location', 'other', name='entity_type'), nullable=False)
     name = Column(String, nullable=False)
     metadata = Column(JSON)
+    source_timestamp = Column(DateTime(timezone=True))
 
 class Person(Base):
     __tablename__ = 'persons'
@@ -58,3 +60,12 @@ class EntityIdentifier(Base):
     identifier_type = Column(Enum('phone', 'email', 'username', 'user_id', 'tax_number', 'passport', 'national_id', 'other', name='identifier_type'), nullable=False)
     identifier_value = Column(String, nullable=False)
     metadata = Column(JSON)
+
+class Artifact(Base):
+    __tablename__ = 'artifacts'
+    id = Column(Integer, primary_key=True)
+    source_id = Column(Integer, ForeignKey('sources.id'))
+    type = Column(Enum('document', 'social_media_post', 'account_dump', 'web_page', 'other', name='artifact_type'), nullable=False)
+    content = Column(String, nullable=False)
+    metadata = Column(JSON)
+    source_timestamp = Column(DateTime(timezone=True))
