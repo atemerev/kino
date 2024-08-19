@@ -64,6 +64,8 @@ CREATE TABLE IF NOT EXISTS persons (
     nationality TEXT,
     sex sex,
     relationship_status relationship_status,
+    current_location_id INTEGER REFERENCES locations(id),
+    origin_location_id INTEGER REFERENCES locations(id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

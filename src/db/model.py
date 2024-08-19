@@ -25,6 +25,8 @@ class Person(Base):
     last_name = Column(String)
     sex = Column(Enum('male', 'female', 'other', name='sex'))
     relationship_status = Column(Enum('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other', name='relationship_status'))
+    current_location_id = Column(Integer, ForeignKey('locations.id'))
+    origin_location_id = Column(Integer, ForeignKey('locations.id'))
     metadata = Column(JSON)
 
 class Authority(Base):
