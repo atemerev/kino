@@ -58,6 +58,8 @@ CREATE TABLE IF NOT EXISTS persons (
     last_name TEXT,
     date_of_birth DATE,
     nationality TEXT,
+    sex TEXT,
+    marital_status TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
