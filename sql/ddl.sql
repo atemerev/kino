@@ -87,14 +87,21 @@ DROP TABLE IF EXISTS locations CASCADE;
 CREATE TABLE IF NOT EXISTS locations (
     id SERIAL PRIMARY KEY,
     entity_id INTEGER REFERENCES entities(id),
-    location_type TEXT,
-    country TEXT,
-    region TEXT,
-    city TEXT,
-    street_address TEXT,
+    name TEXT NOT NULL,
+    official_name TEXT,
+    country_code CHAR(2),
+    longitude DECIMAL(9,6),
+    latitude DECIMAL(8,6),
+    geoname_id INTEGER,
+    location_type TEXT CHECK (location_type IN ('city', 'place', 'country', 'continent', 'region', 'other')),
+    population INTEGER,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_locations_geoname_id ON locations(geoname_id);
+CREATE INDEX IF NOT EXISTS idx_locations_name ON locations(name);
+CREATE INDEX IF NOT EXISTS idx_locations_country_code ON locations(country_code);
 
 -- Entity mentions table (for named entity recognition results)
 DROP TABLE IF EXISTS entity_mentions CASCADE;
