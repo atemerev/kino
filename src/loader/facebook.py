@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import csv
 from typing import List, Dict
+import sys
 from src.db.model import Base, Source, Entity, Person, EntityIdentifier, Authority
 
 def load_facebook_data(file_path: str, db_url: str):
@@ -66,4 +67,10 @@ def load_facebook_data(file_path: str, db_url: str):
     session.close()
 
 if __name__ == "__main__":
-    load_facebook_data('data/sample-facebook.txt', 'postgresql://username:password@localhost/dbname')
+    if len(sys.argv) != 3:
+        print("Usage: python src/loader/facebook.py <file_path> <db_url>")
+        sys.exit(1)
+    
+    file_path = sys.argv[1]
+    db_url = sys.argv[2]
+    load_facebook_data(file_path, db_url)
