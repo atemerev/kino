@@ -1,10 +1,23 @@
 -- Create enum types
 CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'web_page', 'other');
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
+CREATE TYPE source_type AS ENUM ('account_leak', 'telegram_channel', 'website', 'other');
+
+-- Sources table
+CREATE TABLE sources (
+    id SERIAL PRIMARY KEY,
+    type source_type NOT NULL,
+    name TEXT NOT NULL,
+    url TEXT,
+    metadata JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Artifacts table
 CREATE TABLE artifacts (
     id SERIAL PRIMARY KEY,
+    source_id INTEGER REFERENCES sources(id),
     type artifact_type NOT NULL,
     content TEXT NOT NULL,
     metadata JSONB,
@@ -52,4 +65,10 @@ CREATE INDEX idx_entity_mentions_artifact_id ON entity_mentions(artifact_id);
 CREATE INDEX idx_entity_mentions_entity_id ON entity_mentions(entity_id);
 CREATE INDEX idx_entity_relationships_entity1_id ON entity_relationships(entity1_id);
 CREATE INDEX idx_entity_relationships_entity2_id ON entity_relationships(entity2_id);
+
+-- Create index for sources
+CREATE INDEX idx_sources_type ON sources(type);
+
+-- Create index for artifacts.source_id
+CREATE INDEX idx_artifacts_source_id ON artifacts(source_id);
 
