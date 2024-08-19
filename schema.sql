@@ -1,3 +1,6 @@
+-- Enable pg_trgm extension for fuzzy search
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- Create enum types
 CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'web_page', 'other');
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
@@ -115,4 +118,9 @@ CREATE INDEX idx_artifacts_source_id ON artifacts(source_id);
 CREATE INDEX idx_persons_entity_id ON persons(entity_id);
 CREATE INDEX idx_organizations_entity_id ON organizations(entity_id);
 CREATE INDEX idx_locations_entity_id ON locations(entity_id);
+
+-- Create GIN indexes for fuzzy search
+CREATE INDEX idx_entities_name_trgm ON entities USING gin (name gin_trgm_ops);
+CREATE INDEX idx_persons_first_name_trgm ON persons USING gin (first_name gin_trgm_ops);
+CREATE INDEX idx_persons_last_name_trgm ON persons USING gin (last_name gin_trgm_ops);
 
