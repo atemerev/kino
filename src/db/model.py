@@ -43,7 +43,6 @@ class Location(Base):
     geoname_id = Column(Integer)
     location_type = Column(Enum('city', 'place', 'country', 'continent', 'region', 'other', name='location_type'))
     population = Column(Integer)
-    meta_data = Column(JSON)
 
 class Authority(Base):
     __tablename__ = 'authorities'
