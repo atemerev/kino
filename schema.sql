@@ -9,6 +9,8 @@ CREATE TABLE sources (
     type source_type NOT NULL,
     name TEXT NOT NULL,
     url TEXT,
+    medium TEXT,
+    channel TEXT,
     metadata JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
