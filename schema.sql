@@ -37,6 +37,43 @@ CREATE TABLE entities (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Persons table
+CREATE TABLE persons (
+    id SERIAL PRIMARY KEY,
+    entity_id INTEGER REFERENCES entities(id),
+    first_name TEXT,
+    last_name TEXT,
+    date_of_birth DATE,
+    nationality TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Organizations table
+CREATE TABLE organizations (
+    id SERIAL PRIMARY KEY,
+    entity_id INTEGER REFERENCES entities(id),
+    org_type TEXT,
+    founded_date DATE,
+    headquarters TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Locations table
+CREATE TABLE locations (
+    id SERIAL PRIMARY KEY,
+    entity_id INTEGER REFERENCES entities(id),
+    location_type TEXT,
+    latitude DECIMAL(9,6),
+    longitude DECIMAL(9,6),
+    country TEXT,
+    region TEXT,
+    city TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Entity mentions table (for named entity recognition results)
 CREATE TABLE entity_mentions (
     id SERIAL PRIMARY KEY,
@@ -73,4 +110,9 @@ CREATE INDEX idx_sources_type ON sources(type);
 
 -- Create index for artifacts.source_id
 CREATE INDEX idx_artifacts_source_id ON artifacts(source_id);
+
+-- Create indexes for new tables
+CREATE INDEX idx_persons_entity_id ON persons(entity_id);
+CREATE INDEX idx_organizations_entity_id ON organizations(entity_id);
+CREATE INDEX idx_locations_entity_id ON locations(entity_id);
 
