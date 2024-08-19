@@ -29,7 +29,6 @@ class Person(Base):
     relationship_status = Column(Enum('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other', name='relationship_status'))
     current_location_id = Column(Integer, ForeignKey('locations.id'))
     origin_location_id = Column(Integer, ForeignKey('locations.id'))
-    meta_data = Column(JSON)
 
 class Location(Base):
     __tablename__ = 'locations'
