@@ -78,18 +78,13 @@ CREATE TABLE IF NOT EXISTS locations (
     id SERIAL PRIMARY KEY,
     entity_id INTEGER REFERENCES entities(id),
     location_type TEXT,
-    coordinates POINT,
     country TEXT,
     region TEXT,
     city TEXT,
     street_address TEXT,
-    is_exact BOOLEAN,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
--- Create GiST index for efficient geospatial queries
-CREATE INDEX idx_locations_coordinates ON locations USING GIST (coordinates);
 
 -- Entity mentions table (for named entity recognition results)
 DROP TABLE IF EXISTS entity_mentions CASCADE;
