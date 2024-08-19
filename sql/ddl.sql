@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS entity_relationships (
     source_entity INTEGER REFERENCES entities(id),
     target_entity INTEGER REFERENCES entities(id),
     relationship_type TEXT NOT NULL,
-    metadata JSONB,
+    meta_data JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
