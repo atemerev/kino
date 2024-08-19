@@ -48,7 +48,7 @@ def load_facebook_data(file_path: str, db_url: str):
             # Create entity identifiers
             identifiers = [
                 ('phone', phone, None),
-                ('username', facebook_id, facebook_authority.id),
+                ('user_id', facebook_id, facebook_authority.id),
                 ('email', email, None)
             ]
 

@@ -12,7 +12,7 @@ DROP TYPE IF EXISTS sex CASCADE;
 CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dump', 'web_page', 'other');
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
 CREATE TYPE source_type AS ENUM ('account_leak', 'social_media', 'website', 'other');
-CREATE TYPE identifier_type AS ENUM ('phone', 'email', 'username', 'tax_number', 'passport', 'national_id', 'other');
+CREATE TYPE identifier_type AS ENUM ('phone', 'email', 'username', 'user_id', 'tax_number', 'passport', 'national_id', 'other');
 CREATE TYPE relationship_status AS ENUM ('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other');
 CREATE TYPE sex AS ENUM ('male', 'female', 'other');
 

@@ -35,5 +35,5 @@ class EntityIdentifier(Base):
     id = Column(Integer, primary_key=True)
     entity_id = Column(Integer, ForeignKey('entities.id'))
     authority_id = Column(Integer, ForeignKey('authorities.id'))
-    identifier_type = Column(Enum('phone', 'email', 'username', 'tax_number', 'passport', 'national_id', 'other', name='identifier_type'), nullable=False)
+    identifier_type = Column(Enum('phone', 'email', 'username', 'user_id', 'tax_number', 'passport', 'national_id', 'other', name='identifier_type'), nullable=False)
     identifier_value = Column(String, nullable=False)
