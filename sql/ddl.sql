@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS entities (
     type entity_type NOT NULL,
     name TEXT NOT NULL,
     meta_data JSONB,
+    source_timestamp TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

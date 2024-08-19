@@ -18,6 +18,7 @@ class Entity(Base):
     name = Column(String, nullable=False)
     meta_data = Column(JSON)
     source_timestamp = Column(DateTime(timezone=True), nullable=True)
+    source_timestamp = Column(DateTime(timezone=True), nullable=True)
 
 class Person(Base):
     __tablename__ = 'persons'
