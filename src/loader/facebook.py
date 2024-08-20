@@ -17,7 +17,7 @@ from src.util.kino_geocode import KinoGeocode
 
 
 # Initialize two Geocode instances
-gc = KinoGeocode(large_city_population_cutoff=40000)
+gc = KinoGeocode(large_city_population_cutoff=5000)
 gc.load()
 
 def load_facebook_data(file_path: str, db_url: str):

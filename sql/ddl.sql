@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS entity_identifiers (
 -- Create indexes for entity_identifiers
 CREATE INDEX IF NOT EXISTS idx_entity_identifiers_entity_id ON entity_identifiers(entity_id);
 CREATE INDEX IF NOT EXISTS idx_entity_identifiers_authority_id ON entity_identifiers(authority_id);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_entity_identifiers_authority_type_value ON entity_identifiers(authority_id, identifier_type, identifier_value);
+CREATE INDEX IF NOT EXISTS idx_entity_identifiers_authority_type_value ON entity_identifiers(authority_id, identifier_type, identifier_value);
 
 -- Insert some example authorities
 INSERT INTO authorities (name, description) VALUES
