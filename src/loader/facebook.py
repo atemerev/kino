@@ -14,9 +14,12 @@ sys.path.insert(0, project_root)
 
 from src.db.model import Base, Source, Entity, Person, EntityIdentifier, Authority, Location
 
-# Initialize Geocode
-gc = Geocode()
-gc.load()
+# Initialize two Geocode instances
+gc_default = Geocode()
+gc_default.load()
+
+gc_restricted = Geocode(location_types=['city', 'place', 'country', 'region'])
+gc_restricted.load()
 
 def load_facebook_data(file_path: str, db_url: str):
     engine = create_engine(db_url)
