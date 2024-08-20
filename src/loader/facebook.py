@@ -60,9 +60,9 @@ def load_facebook_data(file_path: str, db_url: str):
             origin_location_id = None
 
             if current_location:
-                current_location_id = get_or_create_location(session, gc, location_cache, current_location)
+                current_location_id = get_or_create_location(session, gc_restricted, gc_default, location_cache, current_location)
             if origin_location:
-                origin_location_id = get_or_create_location(session, gc, location_cache, origin_location)
+                origin_location_id = get_or_create_location(session, gc_restricted, gc_default, location_cache, origin_location)
 
             # Create metadata dictionary
             meta_data = {
@@ -113,9 +113,13 @@ def load_facebook_data(file_path: str, db_url: str):
     session.commit()
     session.close()
 
-def get_or_create_location(session, gc, location_cache, location_name):
-    # Try to geocode the location
-    geocoded = gc.decode(location_name)
+def get_or_create_location(session, gc_restricted, gc_default, location_cache, location_name):
+    # Try to geocode the location with restricted instance first
+    geocoded = gc_restricted.decode(location_name)
+    if not geocoded:
+        # If restricted instance fails, try with default instance
+        geocoded = gc_default.decode(location_name)
+    
     if geocoded:
         # Use the first result if there are multiple
         geocoded = geocoded[0]
