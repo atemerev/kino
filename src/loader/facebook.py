@@ -116,13 +116,10 @@ def load_facebook_data(file_path: str, db_url: str):
     session.commit()
     session.close()
 
-def get_or_create_location(session, gc_restricted, gc_default, location_cache, location_name):
+def get_or_create_location(session, geocode, location_cache, location_name):
     # Try to geocode the location with restricted instance first
-    geocoded = gc_restricted.decode(location_name)
-    if not geocoded:
-        # If restricted instance fails, try with default instance
-        geocoded = gc_default.decode(location_name)
-    
+    geocoded = geocode.decode(location_name)
+
     if geocoded:
         # Use the first result if there are multiple
         geocoded = geocoded[0]
