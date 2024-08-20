@@ -153,10 +153,14 @@ def get_or_create_location(session, geocode, location_cache, location_name):
         session.add(location_entity)
         session.flush()  # This will assign an ID to the entity
 
+        # Todo: hack, fix with something more reliable
+        corrected_name = selected_result['name']
+        corrected_name = corrected_name if corrected_name[0].isupper() else corrected_name.title()
+
         # Create a new location
         location = Location(
             entity_id=location_entity.id,
-            name=selected_result['name'],
+            name=corrected_name,
             official_name=selected_result['official_name'],
             country_code=selected_result['country_code'],
             longitude=selected_result['longitude'],
