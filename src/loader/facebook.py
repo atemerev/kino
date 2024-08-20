@@ -89,8 +89,8 @@ def load_facebook_data(file_path: str, db_url: str):
                 entity_id=entity.id,
                 first_name=first_name,
                 last_name=last_name,
-                sex=sex.lower() if sex else None,
-                relationship_status=relationship_status.lower().replace(' ', '_') if relationship_status and relationship_status.lower().replace(' ', '_') in ['single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship'] else None,
+                sex=sex.lower() if sex and sex.lower() in ['male', 'female', 'other'] else None,
+                relationship_status=relationship_status.lower().replace(' ', '_') if relationship_status and relationship_status.lower().replace(' ', '_') in ['single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other'] else None,
                 current_location_id=current_location_id,
                 origin_location_id=origin_location_id
             )
