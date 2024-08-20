@@ -15,11 +15,8 @@ sys.path.insert(0, project_root)
 from src.db.model import Base, Source, Entity, Person, EntityIdentifier, Authority, Location
 
 # Initialize two Geocode instances
-gc_default = Geocode()
-gc_default.load()
-
-gc_restricted = Geocode(location_types=['city', 'place', 'country', 'region'])
-gc_restricted.load()
+gc = Geocode()
+gc.load()
 
 def load_facebook_data(file_path: str, db_url: str):
     engine = create_engine(db_url)
@@ -63,9 +60,9 @@ def load_facebook_data(file_path: str, db_url: str):
             origin_location_id = None
 
             if current_location:
-                current_location_id = get_or_create_location(session, gc_restricted, gc_default, location_cache, current_location)
+                current_location_id = get_or_create_location(session, gc, location_cache, current_location)
             if origin_location:
-                origin_location_id = get_or_create_location(session, gc_restricted, gc_default, location_cache, origin_location)
+                origin_location_id = get_or_create_location(session, gc, location_cache, origin_location)
 
             # Create metadata dictionary
             meta_data = {
