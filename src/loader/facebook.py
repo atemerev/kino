@@ -15,6 +15,8 @@ sys.path.insert(0, project_root)
 from src.db.model import Base, Source, Entity, Person, EntityIdentifier, Authority, Location
 
 # Initialize two Geocode instances
+gc_city = Geocode(location_types=['city'])
+gc_city.load()
 gc = Geocode()
 gc.load()
 
