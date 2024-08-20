@@ -115,12 +115,26 @@ def load_facebook_data(file_path: str, db_url: str):
 
 def get_or_create_location(session, geocode, location_cache, location_name):
     # Try to geocode the location with restricted instance first
-    geocoded = geocode.decode(location_name)
+    geocoded_results = geocode.decode(location_name)
 
-    if geocoded:
-        # Use the first result if there are multiple
-        geocoded = geocoded[0]
-        geoname_id = geocoded['geoname_id']
+    if geocoded_results:
+        # Select the best result based on location_type priority
+        priority_order = ['city', 'admin3', 'admin2', 'admin1', 'country']
+        selected_result = None
+        
+        for priority in priority_order:
+            for result in geocoded_results:
+                if result['location_type'] == priority:
+                    selected_result = result
+                    break
+            if selected_result:
+                break
+        
+        # If no match found in priority list, use the first result
+        if not selected_result:
+            selected_result = geocoded_results[0]
+
+        geoname_id = selected_result['geoname_id']
         
         # Check if the location is already in the cache
         if geoname_id in location_cache:
@@ -133,21 +147,21 @@ def get_or_create_location(session, geocode, location_cache, location_name):
             return existing_location.id
 
         # Create a new entity for the location
-        location_entity = Entity(type='location', name=geocoded['name'], meta_data=json.dumps(geocoded))
+        location_entity = Entity(type='location', name=selected_result['name'], meta_data=json.dumps(selected_result))
         session.add(location_entity)
         session.flush()  # This will assign an ID to the entity
 
         # Create a new location
         location = Location(
             entity_id=location_entity.id,
-            name=geocoded['name'],
-            official_name=geocoded['official_name'],
-            country_code=geocoded['country_code'],
-            longitude=geocoded['longitude'],
-            latitude=geocoded['latitude'],
+            name=selected_result['name'],
+            official_name=selected_result['official_name'],
+            country_code=selected_result['country_code'],
+            longitude=selected_result['longitude'],
+            latitude=selected_result['latitude'],
             geoname_id=geoname_id,
-            location_type=geocoded['location_type'],
-            population=geocoded['population']
+            location_type=selected_result['location_type'],
+            population=selected_result['population']
         )
         session.add(location)
         session.flush()  # This will assign an ID to the location
