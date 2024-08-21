@@ -30,7 +30,7 @@ class Person(Base):
     first_name = Column(String)
     last_name = Column(String)
     gender = Column(gender_enum)
-    relationship_status = Column(Enum('Single', 'Married', 'In a relationship', 'Engaged', 'Divorced', 'Separated', 'It\'s complicated', 'Widowed', 'In a domestic partnership', 'In an open relationship', 'In a civil union', name='relationship_status'))
+    relationship_status = Column(Enum('single', 'married', 'in_relationship', 'engaged', 'divorced', 'separated', 'its_complicated', 'widowed', 'domestic_partnership', 'open_relationship', 'civil_union', name='relationship_status'))
     current_location_id = Column(Integer, ForeignKey('locations.id'))
     origin_location_id = Column(Integer, ForeignKey('locations.id'))
 
