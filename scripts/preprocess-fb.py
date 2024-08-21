@@ -25,8 +25,8 @@ def preprocess_facebook_data(input_file, output_file):
             match = re.search(r'(\d{1,2}/\d{1,2}/\d{4}\s+\d{1,2}:\d{2}:\d{2}\s+[AP]M)', line)
             if match:
                 timestamp = match.group(1)
-                # Remove the timestamp from the line
-                line = line[:match.start()].strip()
+                # Remove the timestamp from the line, but keep the rest
+                line = line[:match.start()].strip() + line[match.end():].strip()
             else:
                 timestamp = ''
             
