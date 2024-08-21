@@ -18,10 +18,11 @@ def preprocess_facebook_data(input_file, output_file):
         # Write header
         csv_writer.writerow([
             'phone', 'facebook_id', 'first_name', 'last_name', 'gender', 'city', 'hometown',
-            'relationship_status', 'workplace', 'timestamp', 'email', 'birthday'
+            'relationship_status', 'workplace', 'timestamp', 'email', 'birthday', 'raw'
         ])
         
         for line in infile:
+            original_line = line.strip()  # Store the original line
             # Use regex to find the timestamp pattern at the end of the line
             match = re.search(r'(\d{1,2}/\d{1,2}/\d{4}\s+\d{1,2}:\d{2}:\d{2}\s+[AP]M)', line)
             if match:
@@ -58,8 +59,8 @@ def preprocess_facebook_data(input_file, output_file):
             # Format birthday if present and contains a year
             formatted_birthday = format_date(birthday) if birthday and len(birthday.split('/')) == 3 else ''
             
-            # Create row with 12 columns
-            row = parts[:9] + [formatted_timestamp, email, formatted_birthday]
+            # Create row with 13 columns (including the raw data)
+            row = parts[:9] + [formatted_timestamp, email, formatted_birthday, original_line]
             
             # Write the processed row
             csv_writer.writerow(row)
