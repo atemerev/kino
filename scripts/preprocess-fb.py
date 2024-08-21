@@ -12,7 +12,7 @@ def format_date(date_string):
     except ValueError:
         return ''
 
-def process_line(line):
+def convert_line(line):
     original_line = line.strip()
     # Use regex to find the timestamp pattern at the end of the line
     match = re.search(r'(\d{1,2}/\d{1,2}/\d{4}\s+\d{1,2}:\d{2}:\d{2}\s+[AP]M)', line)
@@ -71,7 +71,7 @@ def preprocess_facebook_data(input_file, output_file):
         
         for line in infile:
             pbar.update(1)  # Update progress bar
-            row = process_line(line)
+            row = convert_line(line)
             if row:
                 csv_writer.writerow(row)
             else:
