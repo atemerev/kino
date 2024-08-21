@@ -3,12 +3,18 @@ import re
 import sys
 from datetime import datetime
 
-def format_date(date_string, input_format, output_format):
+def format_date(date_string):
     try:
-        date = datetime.strptime(date_string, input_format)
-        return date.strftime(output_format)
+        # Try parsing with year
+        date = datetime.strptime(date_string, '%m/%d/%Y')
+        return date.strftime('%Y-%m-%d')
     except ValueError:
-        return ''
+        try:
+            # Try parsing without year
+            date = datetime.strptime(date_string, '%m/%d')
+            return date.strftime('%m-%d')
+        except ValueError:
+            return ''
 
 def preprocess_facebook_data(input_file, output_file):
     with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
@@ -55,7 +61,7 @@ def preprocess_facebook_data(input_file, output_file):
             birthday = parts[11]
             
             # Format birthday if present
-            formatted_birthday = format_date(birthday, '%m/%d', '%Y-%m-%d') if birthday else ''
+            formatted_birthday = format_date(birthday) if birthday else ''
             
             # Create row with 12 columns
             row = parts[:9] + [formatted_timestamp, email, formatted_birthday]
