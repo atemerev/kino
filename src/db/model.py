@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Date, Enum, ForeignKey, JSON, DateTime, Numeric
+from sqlalchemy.dialects.postgresql import ENUM as PG_ENUM
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -25,7 +26,7 @@ class Person(Base):
     entity_id = Column(Integer, ForeignKey('entities.id'))
     first_name = Column(String)
     last_name = Column(String)
-    sex = Column(Enum('male', 'female', 'other', name='sex'))
+    gender = Column(Enum('male', 'female', 'other', name='gender'))
     relationship_status = Column(Enum('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other', name='relationship_status'))
     current_location_id = Column(Integer, ForeignKey('locations.id'))
     origin_location_id = Column(Integer, ForeignKey('locations.id'))
