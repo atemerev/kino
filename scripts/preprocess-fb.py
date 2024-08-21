@@ -14,29 +14,37 @@ def preprocess_facebook_data(input_file, output_file):
         ])
         
         for line in infile:
-            # Split the line by colon, but keep the timestamp intact
-            parts = line.strip().split(':')
+            # Use regex to find the timestamp pattern at the end of the line
+            match = re.search(r'(\d{1,2}/\d{1,2}/\d{4}\s+\d{1,2}:\d{2}:\d{2}\s+[AP]M)', line)
+            if match:
+                timestamp = match.group(1)
+                # Remove the timestamp from the line
+                line = line[:match.start()].strip()
+            else:
+                timestamp = ''
             
-            if len(parts) < 11:
+            # Split the remaining line by colon
+            parts = line.split(':')
+            
+            if len(parts) < 9:
                 print(f"Skipping malformed line: {line.strip()}")
                 continue
             
-            # Extract timestamp from the end of the line
-            timestamp_parts = parts[-3:]
-            timestamp = ':'.join(timestamp_parts).strip()
-            
             try:
-                parsed_timestamp = datetime.strptime(timestamp, '%m/%d/%Y %I:%M:%S %p')
-                year = parsed_timestamp.year
-                if 1900 <= year <= 2030:
-                    formatted_timestamp = parsed_timestamp.isoformat(sep=' ', timespec='seconds')
+                if timestamp:
+                    parsed_timestamp = datetime.strptime(timestamp, '%m/%d/%Y %I:%M:%S %p')
+                    year = parsed_timestamp.year
+                    if 1900 <= year <= 2030:
+                        formatted_timestamp = parsed_timestamp.isoformat(sep=' ', timespec='seconds')
+                    else:
+                        formatted_timestamp = ''
                 else:
                     formatted_timestamp = ''
             except ValueError:
                 formatted_timestamp = ''
             
-            # Reconstruct the row
-            row = parts[:-3] + [formatted_timestamp] + parts[-1:]
+            # Construct the row
+            row = parts + [formatted_timestamp] + ['', '']  # Add empty fields for email and birthday
             
             # Write the processed row
             csv_writer.writerow(row)
