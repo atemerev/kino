@@ -50,8 +50,15 @@ def preprocess_facebook_data(input_file, output_file):
             except ValueError:
                 formatted_timestamp = ''
             
+            # Handle email and birthday
+            email = parts[9] if len(parts) > 9 else ''
+            birthday = parts[10] if len(parts) > 10 else ''
+            
+            # Format birthday if present
+            formatted_birthday = format_date(birthday, '%m/%d', '%Y-%m-%d') if birthday else ''
+            
             # Ensure all rows have 12 columns
-            row = parts[:9] + [formatted_timestamp, '', '']
+            row = parts[:9] + [formatted_timestamp, email, formatted_birthday]
             
             # Write the processed row
             csv_writer.writerow(row)
