@@ -1,5 +1,6 @@
 import csv
 import re
+import sys
 from datetime import datetime
 
 def preprocess_facebook_data(input_file, output_file):
@@ -35,7 +36,11 @@ def preprocess_facebook_data(input_file, output_file):
             csv_writer.writerow(row)
 
 if __name__ == "__main__":
-    input_file = "data/sample-facebook.txt"
-    output_file = "data/processed-facebook.csv"
+    if len(sys.argv) != 3:
+        print("Usage: python preprocess-fb.py <input_file> <output_file>")
+        sys.exit(1)
+
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
     preprocess_facebook_data(input_file, output_file)
     print(f"Preprocessed data saved to {output_file}")
