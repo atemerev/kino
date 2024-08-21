@@ -14,7 +14,7 @@ CREATE TYPE artifact_type AS ENUM ('document', 'social_media_post', 'account_dum
 CREATE TYPE entity_type AS ENUM ('person', 'organization', 'location', 'other');
 CREATE TYPE source_type AS ENUM ('account_leak', 'social_media', 'website', 'other');
 CREATE TYPE identifier_type AS ENUM ('phone', 'email', 'username', 'user_id', 'tax_number', 'passport', 'national_id', 'other');
-CREATE TYPE relationship_status AS ENUM ('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other');
+CREATE TYPE relationship_status AS ENUM ('Single', 'Married', 'In a relationship', 'Engaged', 'Divorced', 'Separated', 'It''s complicated', 'Widowed', 'In a domestic partnership', 'In an open relationship', 'In a civil union');
 CREATE TYPE sex AS ENUM ('male', 'female', 'other');
 CREATE TYPE location_type AS ENUM ('city', 'place', 'country', 'continent', 'region', 'admin1', 'admin2', 'admin3', 'admin4', 'admin5', 'admin6', 'admin_other', 'other');
 
