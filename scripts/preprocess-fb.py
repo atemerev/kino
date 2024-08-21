@@ -33,7 +33,7 @@ def preprocess_facebook_data(input_file, output_file):
             # Split the remaining line by colon
             parts = line.split(':')
             
-            if len(parts) < 9:
+            if len(parts) != 10:
                 print(f"Skipping malformed line: {line.strip()}")
                 continue
             
