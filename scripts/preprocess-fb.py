@@ -27,7 +27,7 @@ def preprocess_facebook_data(input_file, output_file):
                 parsed_timestamp = datetime.strptime(timestamp, '%m/%d/%Y %I:%M:%S %p')
                 year = parsed_timestamp.year
                 if 1900 <= year <= 2030:
-                    formatted_timestamp = parsed_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                    formatted_timestamp = parsed_timestamp.isoformat(sep=' ', timespec='seconds')
                 else:
                     formatted_timestamp = ''
             except ValueError:
