@@ -20,13 +20,16 @@ class Entity(Base):
     meta_data = Column(JSON)
     source_timestamp = Column(DateTime(timezone=True), nullable=True)
 
+# Create the ENUM type
+gender_enum = PG_ENUM('male', 'female', 'other', name='gender')
+
 class Person(Base):
     __tablename__ = 'persons'
     id = Column(Integer, primary_key=True)
     entity_id = Column(Integer, ForeignKey('entities.id'))
     first_name = Column(String)
     last_name = Column(String)
-    gender = Column(Enum('male', 'female', 'other', name='gender'))
+    gender = Column(gender_enum)
     relationship_status = Column(Enum('single', 'married', 'divorced', 'widowed', 'separated', 'in_relationship', 'other', name='relationship_status'))
     current_location_id = Column(Integer, ForeignKey('locations.id'))
     origin_location_id = Column(Integer, ForeignKey('locations.id'))
