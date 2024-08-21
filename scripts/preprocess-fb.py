@@ -5,16 +5,11 @@ from datetime import datetime
 
 def format_date(date_string):
     try:
-        # Try parsing with year
+        # Only parse dates with year
         date = datetime.strptime(date_string, '%m/%d/%Y')
         return date.strftime('%Y-%m-%d')
     except ValueError:
-        try:
-            # Try parsing without year
-            date = datetime.strptime(date_string, '%m/%d')
-            return date.strftime('%m-%d')
-        except ValueError:
-            return ''
+        return ''
 
 def preprocess_facebook_data(input_file, output_file):
     with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
@@ -60,8 +55,8 @@ def preprocess_facebook_data(input_file, output_file):
             email = parts[10]
             birthday = parts[11]
             
-            # Format birthday if present
-            formatted_birthday = format_date(birthday) if birthday else ''
+            # Format birthday if present and contains a year
+            formatted_birthday = format_date(birthday) if birthday and len(birthday.split('/')) == 3 else ''
             
             # Create row with 12 columns
             row = parts[:9] + [formatted_timestamp, email, formatted_birthday]
