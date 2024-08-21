@@ -15,22 +15,22 @@ def preprocess_facebook_data(input_file, output_file):
         
         for line in infile:
             # Split the line by colon, but keep the timestamp intact
-            parts = re.split(r':(?![/\d])', line.strip())
+            parts = line.strip().split(':')
             
-            if len(parts) < 10:
+            if len(parts) < 11:
                 print(f"Skipping malformed line: {line.strip()}")
                 continue
             
             # Extract timestamp
-            timestamp = parts[-3]
+            timestamp = parts[-3] + ':' + parts[-2]
             try:
                 parsed_timestamp = datetime.strptime(timestamp, '%m/%d/%Y %I:%M:%S %p')
                 formatted_timestamp = parsed_timestamp.strftime('%Y-%m-%d %H:%M:%S')
             except ValueError:
                 formatted_timestamp = ''
             
-            # Reconstruct the row without the timestamp
-            row = parts[:-3] + [formatted_timestamp] + parts[-2:]
+            # Reconstruct the row
+            row = parts[:-3] + [formatted_timestamp] + parts[-1:]
             
             # Write the processed row
             csv_writer.writerow(row)
