@@ -2,6 +2,7 @@ import csv
 import re
 import sys
 from datetime import datetime
+from tqdm import tqdm
 
 def format_date(date_string):
     try:
@@ -12,6 +13,10 @@ def format_date(date_string):
         return ''
 
 def preprocess_facebook_data(input_file, output_file):
+    # Count the number of lines in the input file
+    with open(input_file, 'r') as f:
+        total_lines = sum(1 for _ in f)
+
     with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
         csv_writer = csv.writer(outfile, quoting=csv.QUOTE_MINIMAL)
         
@@ -21,8 +26,12 @@ def preprocess_facebook_data(input_file, output_file):
             'relationship_status', 'workplace', 'timestamp', 'email', 'birthday', 'raw'
         ])
         
+        # Create progress bar
+        pbar = tqdm(total=total_lines, desc="Processing", unit="line")
+        
         for line in infile:
             original_line = line.strip()  # Store the original line
+            pbar.update(1)  # Update progress bar
             # Use regex to find the timestamp pattern at the end of the line
             match = re.search(r'(\d{1,2}/\d{1,2}/\d{4}\s+\d{1,2}:\d{2}:\d{2}\s+[AP]M)', line)
             if match:
@@ -64,6 +73,8 @@ def preprocess_facebook_data(input_file, output_file):
             
             # Write the processed row
             csv_writer.writerow(row)
+        
+        pbar.close()  # Close the progress bar
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
