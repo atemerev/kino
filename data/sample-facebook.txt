@@ -14,7 +14,7 @@
 41754000088:784802569:Rolf:Wenger:male:Bern:::smart dynamic ag:7/13/2018 12:00:00 AM::
 41754000202:100013748227627:Arlan:Rakhmetzhanov:male:::::1/1/0001 12:00:00 AM::
 41754000303:100001893606440:Erblin:Haziraj:male:Dübendorf, Switzerland:Suharekë:Engaged::6/28/2018 12:00:00 AM::
-41754001299:100025297548989:Mjd:Jomrok:female:::::1/1/0001 12:00:00 AM::
+41754001299:100025297548989:Mjd:Jomrok:female:::::::
 41754002000:100010073619535:Jakob J.:Bäbler:male:Schlieren, Zurich:Schlieren, Zurich::Bechtle AG:7/1/2016 12:00:00 AM::
 41754002075:100008883793019:Ceni:Krasniqi:male:Zürich, Switzerland:Pristina::UBS:5/30/2018 12:00:00 AM::09/12
 41754002121:1352768943:Ismail:Sallauka:male:::::7/9/2018 12:00:00 AM::
