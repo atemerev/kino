@@ -3,6 +3,13 @@ import re
 import sys
 from datetime import datetime
 
+def format_date(date_string, input_format, output_format):
+    try:
+        date = datetime.strptime(date_string, input_format)
+        return date.strftime(output_format)
+    except ValueError:
+        return ''
+
 def preprocess_facebook_data(input_file, output_file):
     with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
         csv_writer = csv.writer(outfile, quoting=csv.QUOTE_MINIMAL)
@@ -43,8 +50,15 @@ def preprocess_facebook_data(input_file, output_file):
             except ValueError:
                 formatted_timestamp = ''
             
+            # Handle email and birthday
+            email = parts[-2] if len(parts) > 10 else ''
+            birthday = parts[-1] if len(parts) > 11 else ''
+            
+            # Format birthday if present
+            formatted_birthday = format_date(birthday, '%m/%d/%Y', '%Y-%m-%d') if birthday else ''
+            
             # Construct the row
-            row = parts + [formatted_timestamp] + ['', '']  # Add empty fields for email and birthday
+            row = parts[:10] + [formatted_timestamp, email, formatted_birthday]
             
             # Write the processed row
             csv_writer.writerow(row)
