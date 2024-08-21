@@ -1,12 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from datetime import datetime
-import csv
-from typing import List, Dict
+import pandas as pd
 import sys
 import os
 import json
-
+from tqdm import tqdm
 
 # Add the project root directory to the Python path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -15,8 +13,7 @@ sys.path.insert(0, project_root)
 from src.db.model import Base, Source, Entity, Person, EntityIdentifier, Authority, Location
 from src.util.kino_geocode import KinoGeocode
 
-
-# Initialize two Geocode instances
+# Initialize Geocode instance
 gc = KinoGeocode(large_city_population_cutoff=5000)
 gc.load()
 
@@ -43,98 +40,67 @@ def load_facebook_data(file_path: str, db_url: str):
     # Initialize location cache
     location_cache = {}
 
-    with open(file_path, 'r') as file:
-        csv_reader = csv.reader(file, delimiter=':')
-        for row in csv_reader:
-            # Ensure we have at least the minimum required fields
-            if len(row) < 5:
-                print(f"Skipping row with insufficient data: {row}")
-                continue
+    # Read CSV file
+    df = pd.read_csv(file_path)
 
-            phone, facebook_id, first_name, last_name, sex, *other_fields = row
-            current_location = other_fields[0] if len(other_fields) > 0 else None
-            origin_location = other_fields[1] if len(other_fields) > 1 else None
-            relationship_status = other_fields[2] if len(other_fields) > 2 else None
-            workplace = other_fields[3] if len(other_fields) > 3 else None
+    # Process each row
+    for _, row in tqdm(df.iterrows(), total=len(df), desc="Processing Facebook data"):
+        # Geocode current_location and origin_location
+        current_location_id = get_or_create_location(session, gc, location_cache, row['current_location']) if pd.notna(row['current_location']) else None
+        origin_location_id = get_or_create_location(session, gc, location_cache, row['origin_location']) if pd.notna(row['origin_location']) else None
 
-            # Geocode current_location and origin_location
-            current_location_id = None
-            origin_location_id = None
+        # Create metadata dictionary
+        meta_data = row.to_dict()
 
-            if current_location:
-                current_location_id = get_or_create_location(session, gc, location_cache, current_location)
-            if origin_location:
-                origin_location_id = get_or_create_location(session, gc, location_cache, origin_location)
+        # Create or get the entity
+        entity = Entity(type='person', name=f"{row['first_name']} {row['last_name']}", meta_data=json.dumps(meta_data))
+        session.add(entity)
+        session.flush()  # This will assign an ID to the entity
 
-            # Create metadata dictionary
-            meta_data = {
-                'phone': phone,
-                'facebook_id': facebook_id,
-                'first_name': first_name,
-                'last_name': last_name,
-                'sex': sex,
-                'current_location': current_location,
-                'origin_location': origin_location,
-                'relationship_status': relationship_status,
-                'workplace': workplace
-            }
+        # Create the person
+        person_data = {
+            'entity_id': entity.id,
+            'current_location_id': current_location_id,
+            'origin_location_id': origin_location_id
+        }
+        for field in Person.__table__.columns:
+            if field.name in row and pd.notna(row[field.name]):
+                person_data[field.name] = row[field.name]
 
-            # Create or get the entity
-            entity = Entity(type='person', name=f"{first_name} {last_name}", meta_data=json.dumps(meta_data))
-            session.add(entity)
-            session.flush()  # This will assign an ID to the entity
+        person = Person(**person_data)
+        session.add(person)
 
-            # Create the person
-            person = Person(
-                entity_id=entity.id,
-                first_name=first_name,
-                last_name=last_name,
-                sex=sex.lower() if sex and sex.lower() in ['male', 'female', 'other'] else None,
-                relationship_status=relationship_status.lower().replace(' ', '_').replace("'", '') if relationship_status in ['Single', 'Married', 'In a relationship', 'Engaged', 'Divorced', 'Separated', 'It\'s complicated', 'Widowed', 'In a domestic partnership', 'In an open relationship', 'In a civil union'] else None,
-                current_location_id=current_location_id,
-                origin_location_id=origin_location_id
-            )
-            session.add(person)
+        # Create entity identifiers
+        identifiers = [
+            ('phone', row['phone'], None),
+            ('user_id', row['facebook_id'], facebook_authority.id)
+        ]
 
-            # Create entity identifiers
-            identifiers = [
-                ('phone', phone, None),
-                ('user_id', facebook_id, facebook_authority.id)
-            ]
+        for id_type, id_value, authority_id in identifiers:
+            if pd.notna(id_value):
+                identifier = EntityIdentifier(
+                    entity_id=entity.id,
+                    authority_id=authority_id,
+                    identifier_type=id_type,
+                    identifier_value=str(id_value)
+                )
+                session.add(identifier)
 
-            for id_type, id_value, authority_id in identifiers:
-                if id_value:
-                    identifier = EntityIdentifier(
-                        entity_id=entity.id,
-                        authority_id=authority_id,
-                        identifier_type=id_type,
-                        identifier_value=id_value
-                    )
-                    session.add(identifier)
+        # Commit every 500 rows to avoid large transactions
+        if _ % 500 == 0:
+            session.commit()
 
     session.commit()
     session.close()
 
 def get_or_create_location(session, geocode, location_cache, location_name):
-    # Try to geocode the location with city-only instance first
+    # Try to geocode the location
     geocoded_results = geocode.decode(location_name)
 
     if geocoded_results:
-        # If we have results from either geocoding attempt, select the best one
+        # If we have results, select the best one
         priority_order = ['city', 'place', 'admin3', 'admin2', 'admin1', 'country']
-        selected_result = None
-        
-        for priority in priority_order:
-            for result in geocoded_results:
-                if result['location_type'] == priority:
-                    selected_result = result
-                    break
-            if selected_result:
-                break
-        
-        # If no match found in priority list, use the first result
-        if not selected_result:
-            selected_result = geocoded_results[0]
+        selected_result = next((result for priority in priority_order for result in geocoded_results if result['location_type'] == priority), geocoded_results[0])
 
         geoname_id = selected_result['geoname_id']
         
@@ -153,14 +119,10 @@ def get_or_create_location(session, geocode, location_cache, location_name):
         session.add(location_entity)
         session.flush()  # This will assign an ID to the entity
 
-        # Todo: hack, fix with something more reliable
-        corrected_name = selected_result['name']
-        corrected_name = corrected_name if corrected_name[0].isupper() else corrected_name.title()
-
         # Create a new location
         location = Location(
             entity_id=location_entity.id,
-            name=corrected_name,
+            name=selected_result['name'].title(),
             official_name=selected_result['official_name'],
             country_code=selected_result['country_code'],
             longitude=selected_result['longitude'],
