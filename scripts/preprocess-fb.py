@@ -33,7 +33,7 @@ def preprocess_facebook_data(input_file, output_file):
             # Split the remaining line by colon
             parts = line.split(':')
             
-            if len(parts) < 9:
+            if len(parts) != 12:
                 print(f"Skipping malformed line: {line.strip()}")
                 continue
             
@@ -51,13 +51,13 @@ def preprocess_facebook_data(input_file, output_file):
                 formatted_timestamp = ''
             
             # Handle email and birthday
-            email = parts[9] if len(parts) > 9 else ''
-            birthday = parts[10] if len(parts) > 10 else ''
+            email = parts[10]
+            birthday = parts[11]
             
             # Format birthday if present
             formatted_birthday = format_date(birthday, '%m/%d', '%Y-%m-%d') if birthday else ''
             
-            # Ensure all rows have 12 columns
+            # Create row with 12 columns
             row = parts[:9] + [formatted_timestamp, email, formatted_birthday]
             
             # Write the processed row
