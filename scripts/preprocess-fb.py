@@ -21,8 +21,10 @@ def preprocess_facebook_data(input_file, output_file):
                 print(f"Skipping malformed line: {line.strip()}")
                 continue
             
-            # Extract timestamp
-            timestamp = parts[-3] + ':' + parts[-2]
+            # Extract timestamp from the end of the line
+            timestamp_parts = parts[-3:]
+            timestamp = ':'.join(timestamp_parts).strip()
+            
             try:
                 parsed_timestamp = datetime.strptime(timestamp, '%m/%d/%Y %I:%M:%S %p')
                 year = parsed_timestamp.year
