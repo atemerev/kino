@@ -16,7 +16,7 @@ def preprocess_facebook_data(input_file, output_file):
         
         # Write header
         csv_writer.writerow([
-            'id', 'facebook_id', 'first_name', 'last_name', 'gender', 'city', 'hometown',
+            'phone', 'facebook_id', 'first_name', 'last_name', 'gender', 'city', 'hometown',
             'relationship_status', 'workplace', 'timestamp', 'email', 'birthday'
         ])
         
