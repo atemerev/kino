@@ -11,7 +11,7 @@ CREATE TABLE Records
     workplace String,
     timestamp DateTime,
     email String,
-    birthday String,
+    birthday Date,
     raw String,
     metadata String
 ) ENGINE = MergeTree()
