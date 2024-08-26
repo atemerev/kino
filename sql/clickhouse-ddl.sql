@@ -21,6 +21,6 @@ CREATE TABLE IF NOT EXISTS records
     
     -- Additional columns can be added here in the future
 )
-ENGINE = ReplacingMergeTree()
+ENGINE = MergeTree()
 PRIMARY KEY (uuid)
 ORDER BY (dataset, phone, uuid);
