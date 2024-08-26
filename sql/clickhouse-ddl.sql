@@ -5,12 +5,12 @@ CREATE TABLE IF NOT EXISTS records
     dataset String,
     ingested_at DateTime,
     type String,
-    raw String INDEX raw_lowercase(lower(raw)) TYPE full_text,
+    raw String,
     
     -- Arbitrary attributes (can be extended later)
-    name String INDEX name_lowercase(lower(name)) TYPE full_text,
-    first_name String INDEX first_name_lowercase(lower(first_name)) TYPE full_text,
-    last_name String INDEX last_name_lowercase(lower(last_name)) TYPE full_text,
+    name String,
+    first_name String,
+    last_name String,
     phone String,
     email String,
     internal_id String,
@@ -20,6 +20,11 @@ CREATE TABLE IF NOT EXISTS records
     relationship_status String,
     
     -- Additional columns can be added here in the future
+
+    INDEX raw_lowercase raw_lowercase TYPE full_text(lower(raw)),
+    INDEX name_lowercase name_lowercase TYPE full_text(lower(name)),
+    INDEX first_name_lowercase first_name_lowercase TYPE full_text(lower(first_name)),
+    INDEX last_name_lowercase last_name_lowercase TYPE full_text(lower(last_name))
 )
 ENGINE = MergeTree()
 PRIMARY KEY (uuid)
