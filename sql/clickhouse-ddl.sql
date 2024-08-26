@@ -8,6 +8,9 @@ CREATE TABLE IF NOT EXISTS records
     raw String,
     
     -- Arbitrary attributes (can be extended later)
+    name String,
+    first_name String,
+    last_name String,
     phone String,
     email String,
     internal_id String,
