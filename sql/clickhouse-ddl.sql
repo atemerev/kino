@@ -21,10 +21,10 @@ CREATE TABLE IF NOT EXISTS records
     
     -- Additional columns can be added here in the future
 
-    INDEX raw_lowercase raw_lowercase TYPE full_text(lower(raw)),
-    INDEX name_lowercase name_lowercase TYPE full_text(lower(name)),
-    INDEX first_name_lowercase first_name_lowercase TYPE full_text(lower(first_name)),
-    INDEX last_name_lowercase last_name_lowercase TYPE full_text(lower(last_name))
+    INDEX raw_lowercase(lower(raw)) TYPE full_text,
+    INDEX name_lowercase(lower(name)) TYPE full_text,
+    INDEX first_name_lowercase(lower(first_name)) TYPE full_text,
+    INDEX last_name_lowercase(lower(last_name)) TYPE full_text
 )
 ENGINE = MergeTree()
 PRIMARY KEY (uuid)
