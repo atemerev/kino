@@ -27,5 +27,4 @@ CREATE TABLE IF NOT EXISTS records
     INDEX last_name_lowercase(lower(last_name)) TYPE full_text
 )
 ENGINE = MergeTree()
-PRIMARY KEY (uuid)
-ORDER BY (dataset, phone, uuid);
+PRIMARY KEY (uuid);
