@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS records
     origin String,
     dataset String,
     ingested_at DateTime,
-    type Enum8('database_leak' = 1, 'web_scrape' = 2, 'public_data' = 3),
+    type String,
     raw String,
     
     -- Arbitrary attributes (can be extended later)
