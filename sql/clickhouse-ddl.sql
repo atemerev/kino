@@ -20,10 +20,7 @@ CREATE TABLE IF NOT EXISTS records
     relationship_status String,
     
     -- Additional columns can be added here in the future
-    
-    -- Clickhouse-specific optimizations
-    _version UInt64
 )
-ENGINE = ReplacingMergeTree(_version)
+ENGINE = ReplacingMergeTree()
 PRIMARY KEY (uuid)
-ORDER BY (dataset, phone);
+ORDER BY (dataset, phone, uuid);
