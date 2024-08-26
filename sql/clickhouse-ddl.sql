@@ -23,6 +23,4 @@ CREATE TABLE IF NOT EXISTS records
 )
 ENGINE = ReplacingMergeTree(_version)
 PRIMARY KEY (uuid)
-ORDER BY (dataset, phone)
-PARTITION BY toYYYYMM(ingested_at)
-SETTINGS index_granularity = 8192;
+ORDER BY (dataset, phone);
