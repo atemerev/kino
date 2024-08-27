@@ -1,6 +1,7 @@
 import csv
 import re
 import sys
+import uuid
 from datetime import datetime
 from tqdm import tqdm
 
@@ -11,6 +12,9 @@ def format_date(date_string):
         return date.strftime('%Y-%m-%d')
     except ValueError:
         return ''
+
+def generate_uuid():
+    return str(uuid.uuid4())
 
 def convert_line(line):
     original_line = line.strip()
@@ -49,8 +53,25 @@ def convert_line(line):
     # Format birthday if present and contains a year
     formatted_birthday = format_date(birthday) if birthday and len(birthday.split('/')) == 3 else ''
     
-    # Create row with 13 columns (including the raw data)
-    return parts[:9] + [formatted_timestamp, email, formatted_birthday, original_line]
+    # Create row with ClickHouse table structure
+    return [
+        generate_uuid(),  # uuid
+        'facebook',  # origin
+        'facebook_dataset',  # dataset
+        datetime.now().isoformat(sep=' ', timespec='seconds'),  # ingested_at
+        'person',  # type
+        original_line,  # raw
+        f"{parts[2]} {parts[3]}",  # name
+        parts[2],  # first_name
+        parts[3],  # last_name
+        parts[0],  # phone
+        email,  # email
+        parts[1],  # internal_id (facebook_id)
+        parts[5],  # current_location
+        parts[6],  # origin_location
+        formatted_birthday,  # date_of_birth
+        parts[7],  # relationship_status
+    ]
 
 def preprocess_facebook_data(input_file, output_file):
     # Count the number of lines in the input file
@@ -62,8 +83,9 @@ def preprocess_facebook_data(input_file, output_file):
         
         # Write header
         csv_writer.writerow([
-            'phone', 'facebook_id', 'first_name', 'last_name', 'gender', 'current_location', 'origin_location',
-            'relationship_status', 'workplace', 'timestamp', 'email', 'birthday', 'raw'
+            'uuid', 'origin', 'dataset', 'ingested_at', 'type', 'raw',
+            'name', 'first_name', 'last_name', 'phone', 'email', 'internal_id',
+            'current_location', 'origin_location', 'date_of_birth', 'relationship_status'
         ])
         
         # Create progress bar
