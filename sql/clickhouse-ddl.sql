@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS records
     uuid UUID,
     origin String,
     dataset String,
-    ingestion_time DateTime,
-    origin_time DateTime,
+    ingestion_time DateTime64,
+    origin_time DateTime64,
     type String,
     raw String,
     
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS records
     origin_id String,
     current_location String,
     birth_location String,
-    date_of_birth Date,
+    date_of_birth Date32,
     relationship_status String,
     workplace String,
     

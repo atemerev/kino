@@ -60,6 +60,7 @@ def convert_line(line):
         'facebook',  # origin
         'facebook_dataset',  # dataset
         datetime.now().isoformat(sep=' ', timespec='seconds'),  # ingestion_time
+        parts[9],  # origin time
         'person',  # type
         original_line,  # raw
         f"{parts[2]} {parts[3]}",  # name
@@ -85,7 +86,7 @@ def preprocess_facebook_data(input_file, output_file):
         
         # Write header
         csv_writer.writerow([
-            'uuid', 'origin', 'dataset', 'ingestion_time', 'type', 'raw',
+            'uuid', 'origin', 'dataset', 'ingestion_time', 'origin_time', 'type', 'raw',
             'name', 'first_name', 'last_name', 'phone', 'email', 'origin_id',
             'current_location', 'birth_location', 'date_of_birth', 'relationship_status',
             'workplace'
