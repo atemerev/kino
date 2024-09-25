@@ -30,7 +30,7 @@ def convert_line(line):
     # Split the remaining line by colon
     parts = line.split(':')
     
-    if len(parts) != 12:
+    if len(parts) != 13:
         return None
     
     try:
@@ -46,9 +46,10 @@ def convert_line(line):
     except ValueError:
         formatted_timestamp = ''
     
-    # Handle email and birthday
+    # Handle email, birthday, and workplace
     email = parts[10]
     birthday = parts[11]
+    workplace = parts[8]
     
     # Format birthday if present and contains a year
     formatted_birthday = format_date(birthday) if birthday and len(birthday.split('/')) == 3 else ''
@@ -71,6 +72,7 @@ def convert_line(line):
         parts[6],  # origin_location
         formatted_birthday,  # date_of_birth
         parts[7],  # relationship_status
+        workplace,  # workplace
     ]
 
 def preprocess_facebook_data(input_file, output_file):
@@ -85,7 +87,8 @@ def preprocess_facebook_data(input_file, output_file):
         csv_writer.writerow([
             'uuid', 'origin', 'dataset', 'ingested_at', 'type', 'raw',
             'name', 'first_name', 'last_name', 'phone', 'email', 'internal_id',
-            'current_location', 'origin_location', 'date_of_birth', 'relationship_status'
+            'current_location', 'origin_location', 'date_of_birth', 'relationship_status',
+            'workplace'
         ])
         
         # Create progress bar
