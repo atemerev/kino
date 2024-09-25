@@ -69,7 +69,7 @@ def convert_line(line):
         email,  # email
         parts[1],  # origin_id (facebook_id)
         parts[5],  # current_location
-        parts[6],  # origin_location
+        parts[6],  # birth_location
         formatted_birthday,  # date_of_birth
         parts[7],  # relationship_status
         workplace,  # workplace
@@ -87,7 +87,7 @@ def preprocess_facebook_data(input_file, output_file):
         csv_writer.writerow([
             'uuid', 'origin', 'dataset', 'ingestion_time', 'type', 'raw',
             'name', 'first_name', 'last_name', 'phone', 'email', 'origin_id',
-            'current_location', 'origin_location', 'date_of_birth', 'relationship_status',
+            'current_location', 'birth_location', 'date_of_birth', 'relationship_status',
             'workplace'
         ])
         

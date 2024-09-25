@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS records
     email String,
     origin_id String,
     current_location String,
-    origin_location String,
+    birth_location String,
     date_of_birth Date,
     relationship_status String,
     workplace String,
