@@ -1,3 +1,4 @@
+SET allow_experimental_full_text_index = true;
 CREATE TABLE IF NOT EXISTS records
 (
     uuid UUID,
