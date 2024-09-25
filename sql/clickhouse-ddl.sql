@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS records
     origin String,
     dataset String,
     ingested_at DateTime,
+    origin_time DateTime,
     type String,
     raw String,
     
