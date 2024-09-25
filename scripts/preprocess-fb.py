@@ -30,7 +30,7 @@ def convert_line(line):
     # Split the remaining line by colon
     parts = line.split(':')
     
-    if len(parts) != 13:
+    if len(parts) != 12:
         return None
     
     try:
