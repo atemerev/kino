@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS records
     uuid UUID,
     origin String,
     dataset String,
-    ingestion_time DateTime64,
-    origin_time DateTime64,
+    ingestion_time DateTime64(3) DEFAULT toDateTime64('1900-01-01 00:00:00', 3),
+    origin_time DateTime64(3) DEFAULT toDateTime64('1900-01-01 00:00:00', 3),
     type String,
     raw String,
     
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS records
     origin_id String,
     current_location String,
     birth_location String,
-    date_of_birth Date32,
+    date_of_birth Date32 DEFAULT toDate32('1900-01-01'),
     relationship_status String,
     workplace String,
     
@@ -31,4 +31,4 @@ CREATE TABLE IF NOT EXISTS records
     INDEX workplace_lowercase(lower(workplace)) TYPE full_text
 )
 ENGINE = MergeTree()
-PRIMARY KEY (uuid);
+ORDER BY (uuid);

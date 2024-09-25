@@ -5,13 +5,16 @@ import uuid
 from datetime import datetime
 from tqdm import tqdm
 
+SENTINEL_DATE = '1900-01-01'
+SENTINEL_DATETIME = '1900-01-01 00:00:00.000'
+
 def format_date(date_string):
     try:
         # Only parse dates with year
         date = datetime.strptime(date_string, '%m/%d/%Y')
         return date.strftime('%Y-%m-%d')
     except ValueError:
-        return ''
+        return SENTINEL_DATE
 
 def generate_uuid():
     return str(uuid.uuid4())
@@ -37,14 +40,14 @@ def convert_line(line):
         if timestamp:
             parsed_timestamp = datetime.strptime(timestamp, '%m/%d/%Y %I:%M:%S %p')
             year = parsed_timestamp.year
-            if 1900 <= year <= 2030:
-                formatted_timestamp = parsed_timestamp.isoformat(sep=' ', timespec='seconds')
+            if 1900 <= year <= 2299:
+                formatted_timestamp = parsed_timestamp.isoformat(sep=' ', timespec='milliseconds')
             else:
-                formatted_timestamp = ''
+                formatted_timestamp = SENTINEL_DATETIME
         else:
-            formatted_timestamp = ''
+            formatted_timestamp = SENTINEL_DATETIME
     except ValueError:
-        formatted_timestamp = ''
+        formatted_timestamp = SENTINEL_DATETIME
     
     # Handle email, birthday, and workplace
     email = parts[10]
@@ -52,15 +55,15 @@ def convert_line(line):
     workplace = parts[8]
     
     # Format birthday if present and contains a year
-    formatted_birthday = format_date(birthday) if birthday and len(birthday.split('/')) == 3 else ''
+    formatted_birthday = format_date(birthday) if birthday and len(birthday.split('/')) == 3 else SENTINEL_DATE
     
     # Create row with ClickHouse table structure
     return [
         generate_uuid(),  # uuid
         'facebook',  # origin
         'facebook_dataset',  # dataset
-        datetime.now().isoformat(sep=' ', timespec='seconds'),  # ingestion_time
-        parts[9],  # origin time
+        datetime.now().isoformat(sep=' ', timespec='milliseconds'),  # ingestion_time
+        formatted_timestamp,  # origin_time
         'person',  # type
         original_line,  # raw
         f"{parts[2]} {parts[3]}",  # name
