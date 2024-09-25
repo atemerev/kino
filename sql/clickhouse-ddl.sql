@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS records
     uuid UUID,
     origin String,
     dataset String,
-    ingested_at DateTime,
+    ingestion_time DateTime,
     origin_time DateTime,
     type String,
     raw String,
