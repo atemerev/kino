@@ -1,6 +1,6 @@
 import csv
 import re
-import sys
+import argparse
 from uuid_extensions import uuid7str
 from datetime import datetime
 from tqdm import tqdm
@@ -109,11 +109,10 @@ def preprocess_facebook_data(input_file, output_file):
         pbar.close()  # Close the progress bar
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python preprocess-fb.py <input_file> <output_file>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Preprocess Facebook data")
+    parser.add_argument("input_file", help="Path to the input file")
+    parser.add_argument("output_file", help="Path to the output file")
+    args = parser.parse_args()
 
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
-    preprocess_facebook_data(input_file, output_file)
-    print(f"Preprocessed data saved to {output_file}")
+    preprocess_facebook_data(args.input_file, args.output_file)
+    print(f"Preprocessed data saved to {args.output_file}")
