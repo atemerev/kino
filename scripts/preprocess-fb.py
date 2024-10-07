@@ -19,7 +19,7 @@ def format_date(date_string):
 def generate_uuid():
     return uuid7str()
 
-def convert_line(line):
+def convert_line(line, country_code):
     original_line = line.strip()
     # Use regex to find the timestamp pattern at the end of the line
     match = re.search(r'(\d{1,2}/\d{1,2}/\d{4}\s+\d{1,2}:\d{2}:\d{2}\s+[AP]M)', line)
@@ -77,9 +77,10 @@ def convert_line(line):
         formatted_birthday,  # date_of_birth
         parts[7],  # relationship_status
         workplace,  # workplace
+        country_code,  # country_code
     ]
 
-def preprocess_facebook_data(input_file, output_file):
+def preprocess_facebook_data(input_file, output_file, country_code):
     # Count the number of lines in the input file
     with open(input_file, 'r') as f:
         total_lines = sum(1 for _ in f)
@@ -92,7 +93,7 @@ def preprocess_facebook_data(input_file, output_file):
             'uuid', 'origin', 'dataset', 'ingestion_time', 'origin_time', 'type', 'raw',
             'name', 'first_name', 'last_name', 'phone', 'email', 'origin_id',
             'current_location', 'birth_location', 'date_of_birth', 'relationship_status',
-            'workplace'
+            'workplace', 'country_code'
         ])
         
         # Create progress bar
@@ -100,7 +101,7 @@ def preprocess_facebook_data(input_file, output_file):
         
         for line in infile:
             pbar.update(1)  # Update progress bar
-            row = convert_line(line)
+            row = convert_line(line, country_code)
             if row:
                 csv_writer.writerow(row)
             else:
@@ -112,7 +113,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Preprocess Facebook data")
     parser.add_argument("input_file", help="Path to the input file")
     parser.add_argument("output_file", help="Path to the output file")
+    parser.add_argument("country_code", help="Country code for the data")
     args = parser.parse_args()
 
-    preprocess_facebook_data(args.input_file, args.output_file)
+    preprocess_facebook_data(args.input_file, args.output_file, args.country_code)
     print(f"Preprocessed data saved to {args.output_file}")
