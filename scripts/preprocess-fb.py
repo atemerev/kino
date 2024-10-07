@@ -1,12 +1,12 @@
 import csv
 import re
 import sys
-import uuid
+from uuid_extensions import uuid7str
 from datetime import datetime
 from tqdm import tqdm
 
-SENTINEL_DATE = '1900-01-01'
-SENTINEL_DATETIME = '1900-01-01 00:00:00.000'
+SENTINEL_DATE = ''
+SENTINEL_DATETIME = ''
 
 def format_date(date_string):
     try:
@@ -17,7 +17,7 @@ def format_date(date_string):
         return SENTINEL_DATE
 
 def generate_uuid():
-    return str(uuid.uuid4())
+    return uuid7str()
 
 def convert_line(line):
     original_line = line.strip()
@@ -61,7 +61,7 @@ def convert_line(line):
     return [
         generate_uuid(),  # uuid
         'facebook',  # origin
-        'facebook_dataset',  # dataset
+        'facebook_breach_2019',  # dataset
         datetime.now().isoformat(sep=' ', timespec='milliseconds'),  # ingestion_time
         formatted_timestamp,  # origin_time
         'person',  # type
