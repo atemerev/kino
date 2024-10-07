@@ -61,7 +61,7 @@ def convert_line(line):
     return [
         generate_uuid(),  # uuid
         'facebook',  # origin
-        'facebook_breach_2019',  # dataset
+        'DI-2019-08-FACEBOOK',  # dataset
         datetime.now().isoformat(sep=' ', timespec='milliseconds'),  # ingestion_time
         formatted_timestamp,  # origin_time
         'person',  # type
